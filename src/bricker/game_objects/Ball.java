@@ -7,15 +7,27 @@ import danogl.gui.Sound;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+import java.util.Random;
+
 public class Ball extends GameObject {
-    private Sound collissionSound;
+    private static final float BALL_SPEED = 150;
+    private final Sound collissionSound;
     private int collisions;
 
 
     public Ball(Vector2 startLoc, Renderable renderable, Sound collissionSound) {
         super(startLoc, new Vector2(50, 50), renderable);
         this.collissionSound = collissionSound;
-        this.setVelocity(Vector2.DOWN.mult(300));
+        float ballVelX = BALL_SPEED;
+        float ballVelY = BALL_SPEED;
+        Random rand = new Random();
+        if (rand.nextBoolean()) {
+            ballVelX = -ballVelX;
+        }
+        if (rand.nextBoolean()) {
+            ballVelY = -ballVelY;
+        }
+        this.setVelocity(new Vector2(ballVelX, ballVelY));
         this.collisions = 0;
     }
 
