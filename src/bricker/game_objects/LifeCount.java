@@ -3,14 +3,16 @@ import danogl.GameObject;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+import java.awt.*;
+
 public class LifeCount extends GameObject {
-    private static final int INITIAL_LIVES = 5;
+    private static final Vector2 HEART_SIZE = new Vector2(20, 20);
+
     private int lives;
 
-    public LifeCount(int x, int y, Renderable renderable) {
-        super(new Vector2(x, y), new Vector2(0,0), null);
-        lives = INITIAL_LIVES;
-        // display the number of lives as a row of hearts (renderable)
+    public LifeCount(Vector2 position, Renderable renderable, int lives) {
+        super(position, HEART_SIZE, renderable);
+        this.lives = lives;
     }
 
     public void loseLife() {

@@ -7,6 +7,7 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import src.bricker.game_objects.Ball;
 import src.bricker.game_objects.Brick;
+import src.bricker.game_objects.LifeCount;
 import src.bricker.game_objects.Paddle;
 
 public class BrickBreakerGameManager extends GameManager {
@@ -60,18 +61,20 @@ public class BrickBreakerGameManager extends GameManager {
                 Renderable brickImg = imageReader.readImage("assets/brick.png", false);
                 GameObject brick = new Brick(
                         new Vector2(i * Brick.BRICK_WIDTH, j * Brick.BRICK_HEIGHT),
-                        brickImg
+                        brickImg,
+                        gameObjects()
                 );
                 gameObjects().addGameObject(brick);
             }
         }
 
         Renderable lifeImg = imageReader.readImage("assets/heart.png", true);
-        GameObject lifeCount = new GameObject(
-                new Vector2(0, 0),
-                new Vector2(0, 0),
-                lifeImg
-        );
+        LifeCount lifeCount =
+                new LifeCount(
+                        new Vector2(10,windowDimensions.y()-30),
+                        lifeImg,
+                        5
+                );
         gameObjects().addGameObject(lifeCount);
 
     }
