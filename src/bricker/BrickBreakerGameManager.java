@@ -12,21 +12,36 @@ import src.bricker.game_objects.Paddle;
 
 public class BrickBreakerGameManager extends GameManager {
 
+    private final static int SCREEN_WIDTH = 700;
+    private final static int SCREEN_LENGTH = 500;
+
+
+    /**
+     * Default Constructor.
+     */
     public BrickBreakerGameManager(String windowTitle, Vector2 windowDimensions) {
         super(windowTitle, windowDimensions);
     }
 
+
+    /**
+     * This method intializes the game.
+     * @param
+     */
     @Override
-    public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener, WindowController windowController) {
+    public void initializeGame(ImageReader imageReader, SoundReader soundReader,
+                               UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         Vector2 windowDimensions = windowController.getWindowDimensions();
 
+        //ball
         Renderable ballImg =
             imageReader.readImage("assets/ball.png", true);
         Sound collisionSound = soundReader.readSound("assets/blop.wav");
         GameObject ball = new Ball(windowDimensions.mult((float)0.5), ballImg, collisionSound);
         gameObjects().addGameObject(ball);
 
+        //paddle
         Renderable paddleImg =
                 imageReader.readImage("assets/paddle.png", false);
         Paddle paddle = new Paddle(paddleImg, inputListener);
@@ -58,7 +73,8 @@ public class BrickBreakerGameManager extends GameManager {
 
         for (int i = 0; i < windowDimensions.x() / Brick.BRICK_WIDTH; i++) {
             for (int j = 0; j < 5; j++) {
-                Renderable brickImg = imageReader.readImage("assets/brick.png", false);
+                Renderable brickImg = imageReader.readImage("assets/brick.png",
+                        false);
                 GameObject brick = new Brick(
                         new Vector2(i * Brick.BRICK_WIDTH, j * Brick.BRICK_HEIGHT),
                         brickImg,
@@ -79,11 +95,18 @@ public class BrickBreakerGameManager extends GameManager {
 
     }
 
+    /**
+     * the Main method of the game
+     * args[0] - round count
+     * args[1] - size
+     * args[2] - win streak
+     * args[3] - renderer type
+     * args[4] - player 1 name
+     * args[5] - player 2 name
+     */
     public static void main(String[] args) {
-        new BrickBreakerGameManager(
-                "Brick Breaker",
-                new Vector2(800, 600)
-        ).run();
-
+        BrickBreakerGameManager game = new BrickBreakerGameManager("Bricker",
+                new Vector2(SCREEN_WIDTH, SCREEN_LENGTH));
+        game.run();
     }
 }
