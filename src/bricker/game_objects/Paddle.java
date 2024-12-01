@@ -19,6 +19,9 @@ public class Paddle extends GameObject {
     public Paddle(Renderable renderable,
                   UserInputListener inputListener,
                   float windowWidth) {
+        /*
+        Documentation:
+         */
         super(
                 new Vector2(START_PADDLE_POS_X,START_PADDLE_POS_Y),
                 new Vector2(START_PADDLE_WIDTH, START_PADDLE_HEIGHT),
