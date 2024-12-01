@@ -19,7 +19,7 @@ public class Brick extends GameObject {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if (other instanceof Ball) {
+        if (other instanceof Ball && !(other instanceof FauxBall)) {
             allObjects.removeGameObject(this);
         }
     }
