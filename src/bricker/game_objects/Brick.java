@@ -8,7 +8,7 @@ import danogl.util.Vector2;
 
 public class Brick extends GameObject {
     public static final int BRICK_WIDTH = 80;
-    public static final int BRICK_HEIGHT = 30;
+    public static final int BRICK_HEIGHT = 15;
     private final GameObjectCollection allObjects;
 
     public Brick(Vector2 position, Renderable renderable, GameObjectCollection allObjects) {
@@ -19,7 +19,7 @@ public class Brick extends GameObject {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if (other instanceof Ball && !(other instanceof Puck)) {
+        if (other instanceof Ball) {
             allObjects.removeGameObject(this);
         }
     }
