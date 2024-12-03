@@ -12,6 +12,8 @@ import src.bricker.game_objects.Brick;
 import src.bricker.game_objects.LifeCount;
 import src.bricker.game_objects.Paddle;
 
+import java.awt.event.KeyEvent;
+
 public class BrickBreakerGameManager extends GameManager {
 
 
@@ -37,6 +39,7 @@ public class BrickBreakerGameManager extends GameManager {
     private final static String COLLISION_SOUND = "assets/blop.wav";
     private final static String BACKGROUND_IMAGE = "assets/DARK_BG2_small.jpeg";
     private static final float BALL_SPEED = 150; // still a problem , should the manager now this ?
+    private UserInputListener inputListener;
 
 
     /**
@@ -58,6 +61,7 @@ public class BrickBreakerGameManager extends GameManager {
         this.imageReader = imageReader;
         this.soundReader = soundReader;
         this.windowController = windowController;
+        this.inputListener = inputListener;
         WINDOW_DIMENSIONS = windowController.getWindowDimensions();
         CENTER = WINDOW_DIMENSIONS.mult((float)0.5);
         windowController.setTargetFramerate(80);
@@ -223,15 +227,20 @@ public class BrickBreakerGameManager extends GameManager {
                 recenterBall(imageReader,soundReader);
             }
         }
-        else{
-            prompt = "You lose! Play again?";
-            if(windowController.openYesNoDialog(prompt)){
-                windowController.resetGame();
-            }
-            else{
-                windowController.closeWindow();
-            }
+        else {
+            prompt = "lose";
         }
+        if(Brick.getBrickCounter() == 0 || winButtonPressed()){
+            prompt = "win";
+        }
+        if (prompt != null) {
+            prompt = String.format("You %s! Play again?", prompt);
+            gameEndPrompt(prompt);
+        }
+    }
+
+    private boolean winButtonPressed() {
+        return inputListener.isKeyPressed(KeyEvent.VK_W);
     }
 
     /**
@@ -240,5 +249,17 @@ public class BrickBreakerGameManager extends GameManager {
     private void recenterBall(ImageReader imageReader,SoundReader soundReader) { // maybe it would be better to delete and recreate ?(time complexity ?)
         gameObjects().removeGameObject(ball);
         createBall(imageReader,soundReader);
+    }
+
+    /**
+     * Shows the desired game end prompt
+     */
+    private void gameEndPrompt(String prompt) {
+        if(windowController.openYesNoDialog(prompt)){
+            windowController.resetGame();
+        }
+        else{
+            windowController.closeWindow();
+        }
     }
 }
