@@ -4,20 +4,24 @@ import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import src.bricker.brick_strategies.CollisionStrategy;
 
 
 public class Brick extends GameObject {
-    public static final int BRICK_WIDTH = 80;
+//    public static final int BRICK_WIDTH = 80;
     public static final int BRICK_HEIGHT = 15;
+    private static int lastDestroyed = -1;
 
-    // TODO:   allObjects is a bad idea
-    private final GameObjectCollection allObjects;
+
+    private final int index;
     private static int brickCounter = 0;
+    private final CollisionStrategy collisionStrategy;
 
-    public Brick(Vector2 position, Renderable renderable, GameObjectCollection allObjects) {
-        super(position, new Vector2(BRICK_WIDTH, BRICK_HEIGHT), renderable);
+    public Brick(Vector2 position, Vector2 size, Renderable renderable, CollisionStrategy collisionStrategy,int index) {
+        super(position, size, renderable);
+        this.collisionStrategy = collisionStrategy;
         this.brickCounter++;
-        this.allObjects = allObjects;
+        this.index = index;
     }
 
     public static int getBrickCounter() {
@@ -29,8 +33,12 @@ public class Brick extends GameObject {
         super.onCollisionEnter(other, collision);
         if (other instanceof Ball) {
             brickCounter--;
-            allObjects.removeGameObject(this);
+            lastDestroyed = index;
         }
+    }
+
+    public static int getLastDestroyed() {
+        return lastDestroyed;
     }
 }
 

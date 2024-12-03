@@ -7,6 +7,7 @@ import danogl.components.CoordinateSpace;
 import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import src.bricker.brick_strategies.CollisionStrategy;
 import src.bricker.game_objects.Ball;
 import src.bricker.game_objects.Brick;
 import src.bricker.game_objects.LifeCount;
@@ -20,7 +21,6 @@ public class BrickBreakerGameManager extends GameManager {
     private static Vector2 WINDOW_DIMENSIONS ;
     private static float BRICK_ROW_NUMBER = 7;
     private static float BRICK_COL_NUMBER = 8;
-    private static final float DEFAULT_BRICK_HEIGHT = 15;
     private static Ball ball = null;
     private LifeCount lifeCount;
     private static final int STARTING_NUMBER_OF_LIVES = 3;
@@ -40,6 +40,8 @@ public class BrickBreakerGameManager extends GameManager {
     private final static String BACKGROUND_IMAGE = "assets/DARK_BG2_small.jpeg";
     private static final float BALL_SPEED = 150; // still a problem , should the manager now this ?
     private UserInputListener inputListener;
+    private Brick[] brickArray;
+
 
 
     /**
@@ -89,6 +91,9 @@ public class BrickBreakerGameManager extends GameManager {
     public void update(float deltaTime) {
         super.update(deltaTime);
         float ballHeight = ball.getCenter().y();
+        if (Brick.getLastDestroyed() >= 0){
+            gameObjects().removeGameObject(brickArray[Brick.getLastDestroyed()]);
+        }
 
         checkGameEnd(ballHeight);
     }
@@ -175,21 +180,34 @@ public class BrickBreakerGameManager extends GameManager {
      * This method builds all the bricks for the game.
      */
     private void brickBuilder(ImageReader imageReader) {
+        brickArray = new Brick[(int)(BRICK_ROW_NUMBER * BRICK_COL_NUMBER)];
         float brickWidth = WINDOW_DIMENSIONS.x()/BRICK_COL_NUMBER;
         float newBrickCoordinate = 0;
-        for (int i = 0; i < WINDOW_DIMENSIONS.x() / BRICK_COL_NUMBER; i++) {
+        int index = 0;
+        Vector2 brickSize = new Vector2(
+                brickWidth,
+                Brick.BRICK_HEIGHT
+        );
+        for (int i = 0; i < BRICK_COL_NUMBER; i++) {
             for (int j = 0; j < BRICK_ROW_NUMBER; j++) {
                 Renderable brickImg = imageReader.readImage(BRICK_IMAGE,
                         false);
                 newBrickCoordinate = i * brickWidth;
-                GameObject brick = new Brick(
+                CollisionStrategy strategy = getColisionSrategy();
+                Brick brick = new Brick(
                         new Vector2(newBrickCoordinate, j * Brick.BRICK_HEIGHT),
+                        brickSize,
                         brickImg,
-                        gameObjects()
+                        strategy,
+                        index
                 );
+                brickArray[index++] = brick;
                 gameObjects().addGameObject(brick);
             }
         }
+    }
+
+    private CollisionStrategy getColisionSrategy() {
     }
 
     /**
