@@ -8,6 +8,7 @@ import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import src.bricker.brick_strategies.BasicCollisionStrategy;
+import src.bricker.brick_strategies.CollisionFactory;
 import src.bricker.brick_strategies.CollisionStrategy;
 import src.bricker.game_objects.Ball;
 import src.bricker.game_objects.Brick;
@@ -226,7 +227,7 @@ public class BrickBreakerGameManager extends GameManager {
     public CollisionStrategy randomCollisionStrategy() {
         Random rnd = new Random();
         int randInt = rnd.nextInt(5);
-        return CollisionFactory.buildCollisionStrategy(strategyArray[randInt],this);
+        return CollisionFactory.buildCollisionStrategy(strategyArray[randInt], this);
     }
 
     /**

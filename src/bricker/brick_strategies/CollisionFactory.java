@@ -1,5 +1,7 @@
 package src.bricker.brick_strategies;
 
+import src.bricker.BrickBreakerGameManager;
+
 public class CollisionFactory {
 
     private static final String EXTRA_BALL = "ball";
@@ -11,7 +13,7 @@ public class CollisionFactory {
     /**
      * builds players according to the input
      */
-    public static CollisionStrategy buildCollisionStrategy(String type){
+    public static CollisionStrategy buildCollisionStrategy(String type, BrickBreakerGameManager gameManager) {
         CollisionStrategy collisionStrategy;
         switch(type){
             case EXTRA_BALL:
