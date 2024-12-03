@@ -34,12 +34,15 @@ public class BrickBreakerGameManager extends GameManager {
     private final static int SCREEN_WIDTH = 700;
     private final static int SCREEN_LENGTH = 500;
     private final static Renderable NON_RENDERABLE = null;
+    private static final String TURBO_IMAGE = "assets/redball.png";
+    private static final String PUCK_IMAGE = "assets/mockBall.png";
     private final static String BALL_IMAGE = "assets/ball.png";
     private final static String PADDLE_IMAGE = "assets/paddle.png";
     private final static String BRICK_IMAGE = "assets/brick.png";
     private final static String HEART_IMAGE = "assets/heart.png";
     private final static String COLLISION_SOUND = "assets/blop.wav";
     private final static String BACKGROUND_IMAGE = "assets/DARK_BG2_small.jpeg";
+    private static final String[] strategyArray = {"ball","paddle","turbo","heart","double"};
     private static final float BALL_SPEED = 150; // still a problem , should the manager now this ?
     private UserInputListener inputListener;
 //    private Brick[] brickArray;
@@ -143,8 +146,10 @@ public class BrickBreakerGameManager extends GameManager {
     private void createBall(ImageReader imageReader, SoundReader soundReader) {
         Renderable ballImg =
                 imageReader.readImage(BALL_IMAGE, true);
+        Renderable turboImg =
+                imageReader.readImage(TURBO_IMAGE, true);
         Sound collisionSound = soundReader.readSound(COLLISION_SOUND);
-        Ball ball = new Ball(CENTER, ballImg, collisionSound); // !!!!!!!!!!!!!!!! nu e Ball ball
+        Ball ball = new Ball(CENTER, ballImg, turboImg,collisionSound); // !!!!!!!!!!!!!!!! nu e Ball ball
         this.ball = ball;
         gameObjects().addGameObject(ball);
     }
@@ -195,12 +200,11 @@ public class BrickBreakerGameManager extends GameManager {
                 Renderable brickImg = imageReader.readImage(BRICK_IMAGE,
                         false);
                 newBrickCoordinate = i * brickWidth;
-                CollisionStrategy strategy = getColisionSrategy();
                 Brick brick = new Brick(
                         new Vector2(newBrickCoordinate, j * Brick.BRICK_HEIGHT),
                         brickSize,
                         brickImg,
-                        strategy
+                        getCollisionStrategy()
 //                        index
                 );
 //                brickArray[index++] = brick;
@@ -209,16 +213,20 @@ public class BrickBreakerGameManager extends GameManager {
         }
     }
 
-    private CollisionStrategy getColisionSrategy() {
-        return new BasicCollisionStrategy(this);
-//        Random rnd = new Random();
-//        if (rnd.nextBoolean()) {
-//        }
-//        else {
-//            int rndInt = rnd.nextInt(5);
-//
-//            return null;
-//        }
+    private CollisionStrategy getCollisionStrategy() {
+        Random rnd = new Random();
+        if (rnd.nextBoolean()) {
+            return new BasicCollisionStrategy(this);
+        }
+        else {
+            return randomCollisionStrategy();
+        }
+    }
+
+    public CollisionStrategy randomCollisionStrategy() {
+        Random rnd = new Random();
+        int randInt = rnd.nextInt(5);
+        return CollisionFactory.buildCollisionStrategy(strategyArray[randInt],this);
     }
 
     /**
