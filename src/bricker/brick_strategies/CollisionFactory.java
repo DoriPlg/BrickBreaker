@@ -29,7 +29,7 @@ public class CollisionFactory {
             default:
                 collisionStrategy = null;
                 break;
-        }
+        }  // hint
     return collisionStrategy;
     }
 }
