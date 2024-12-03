@@ -28,7 +28,7 @@ public class MorePaddleCollisionStrategy implements CollisionStrategy {
     }
 
     @Override
-    public void onCollision(GameObject thisObj, GameObject otherObj, GameObjectCollection objects) {
+    public void onCollision(GameObject thisObj, GameObject otherObj) {
         Paddle paddle = new Paddle(paddleImg, inputListener, windowSize.x());
         Random rnd = new Random();
         float random = rnd.nextFloat(0,1);
@@ -36,6 +36,6 @@ public class MorePaddleCollisionStrategy implements CollisionStrategy {
                 new Vector2(paddle.getDimensions().x()/2 +
                         (windowSize.x()-paddle.getDimensions().x()) * random, windowSize.y() - 30)
         );
-        objects.addGameObject(paddle);
+//        objects.addGameObject(paddle);
     }
 }

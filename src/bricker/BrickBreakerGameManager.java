@@ -7,6 +7,7 @@ import danogl.components.CoordinateSpace;
 import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import src.bricker.brick_strategies.BasicCollisionStrategy;
 import src.bricker.brick_strategies.CollisionStrategy;
 import src.bricker.game_objects.Ball;
 import src.bricker.game_objects.Brick;
@@ -14,6 +15,7 @@ import src.bricker.game_objects.LifeCount;
 import src.bricker.game_objects.Paddle;
 
 import java.awt.event.KeyEvent;
+import java.util.Random;
 
 public class BrickBreakerGameManager extends GameManager {
 
@@ -40,7 +42,7 @@ public class BrickBreakerGameManager extends GameManager {
     private final static String BACKGROUND_IMAGE = "assets/DARK_BG2_small.jpeg";
     private static final float BALL_SPEED = 150; // still a problem , should the manager now this ?
     private UserInputListener inputListener;
-    private Brick[] brickArray;
+//    private Brick[] brickArray;
 
 
 
@@ -91,9 +93,9 @@ public class BrickBreakerGameManager extends GameManager {
     public void update(float deltaTime) {
         super.update(deltaTime);
         float ballHeight = ball.getCenter().y();
-        if (Brick.getLastDestroyed() >= 0){
-            gameObjects().removeGameObject(brickArray[Brick.getLastDestroyed()]);
-        }
+//        if (Brick.getLastDestroyed() >= 0){
+//            gameObjects().removeGameObject(brickArray[Brick.getLastDestroyed()]);
+//        }
 
         checkGameEnd(ballHeight);
     }
@@ -180,10 +182,10 @@ public class BrickBreakerGameManager extends GameManager {
      * This method builds all the bricks for the game.
      */
     private void brickBuilder(ImageReader imageReader) {
-        brickArray = new Brick[(int)(BRICK_ROW_NUMBER * BRICK_COL_NUMBER)];
+//        brickArray = new Brick[(int)(BRICK_ROW_NUMBER * BRICK_COL_NUMBER)];
         float brickWidth = WINDOW_DIMENSIONS.x()/BRICK_COL_NUMBER;
         float newBrickCoordinate = 0;
-        int index = 0;
+//        int index = 0;
         Vector2 brickSize = new Vector2(
                 brickWidth,
                 Brick.BRICK_HEIGHT
@@ -198,16 +200,25 @@ public class BrickBreakerGameManager extends GameManager {
                         new Vector2(newBrickCoordinate, j * Brick.BRICK_HEIGHT),
                         brickSize,
                         brickImg,
-                        strategy,
-                        index
+                        strategy
+//                        index
                 );
-                brickArray[index++] = brick;
+//                brickArray[index++] = brick;
                 gameObjects().addGameObject(brick);
             }
         }
     }
 
     private CollisionStrategy getColisionSrategy() {
+        return new BasicCollisionStrategy(this);
+//        Random rnd = new Random();
+//        if (rnd.nextBoolean()) {
+//        }
+//        else {
+//            int rndInt = rnd.nextInt(5);
+//
+//            return null;
+//        }
     }
 
     /**
@@ -279,5 +290,9 @@ public class BrickBreakerGameManager extends GameManager {
         else{
             windowController.closeWindow();
         }
+    }
+
+    public void remove(GameObject toRemove) {
+        gameObjects().removeGameObject(toRemove);
     }
 }

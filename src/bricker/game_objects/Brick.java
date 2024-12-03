@@ -13,15 +13,15 @@ public class Brick extends GameObject {
     private static int lastDestroyed = -1;
 
 
-    private final int index;
+//    private final int index;
     private static int brickCounter = 0;
     private final CollisionStrategy collisionStrategy;
 
-    public Brick(Vector2 position, Vector2 size, Renderable renderable, CollisionStrategy collisionStrategy,int index) {
+    public Brick(Vector2 position, Vector2 size, Renderable renderable, CollisionStrategy collisionStrategy) {
         super(position, size, renderable);
         this.collisionStrategy = collisionStrategy;
         this.brickCounter++;
-        this.index = index;
+//        this.index = index;
     }
 
     public static int getBrickCounter() {
@@ -33,7 +33,7 @@ public class Brick extends GameObject {
         super.onCollisionEnter(other, collision);
         if (other instanceof Ball) {
             brickCounter--;
-            lastDestroyed = index;
+            collisionStrategy.onCollision(this, other);
         }
     }
 
