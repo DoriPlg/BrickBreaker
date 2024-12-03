@@ -4,9 +4,7 @@ import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import src.bricker.game_objects.Ball;
-import src.bricker.game_objects.Brick;
-import src.bricker.game_objects.FauxBall;
+import src.bricker.game_objects.Puck;
 
 public class MoreBallsCollisionStrategy implements CollisionStrategy {
 
@@ -22,7 +20,7 @@ public class MoreBallsCollisionStrategy implements CollisionStrategy {
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj, GameObjectCollection objects) {
         for (int i = 0; i < NUMBER_OF_BALLS; i++) {
-            FauxBall fake = new FauxBall(start, fauxBallImg);
+            Puck fake = new Puck(start, fauxBallImg);
             objects.addGameObject(fake);
         }
     }
