@@ -14,9 +14,9 @@ public class Ball extends GameObject {
     private static final float TURBO_FACTOR = 1.4f;
     private static final int HITS_IN_TURBO = 6;
     private final Sound collissionSound;
+    private final Renderable regularRender;
+    private final Renderable turboRender;
     private int collisions;
-    private Renderable regularRender;
-    private Renderable turboRender;
     private int timeTurbo;
 
 
