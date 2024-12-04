@@ -16,19 +16,22 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Random;
 
+/**
+ * Manages the Brick Breaker game, including initializing game objects,
+ * updating game state, and handling game events.
+ */
 public class BrickBreakerGameManager extends GameManager {
-
-
     private static Vector2 WINDOW_DIMENSIONS ;
     private static float BRICK_ROW_NUMBER = 7;
     private static float BRICK_COL_NUMBER = 8;
-    private static Ball ball = null;
+    private  Ball ball = null;
     private LifeCount lifeCount;
     private static final int STARTING_NUMBER_OF_LIVES = 3;
     private static Vector2 CENTER = null;
     private static ImageReader imageReader;
     private static SoundReader soundReader;
     private static WindowController windowController;
+    private static UserInputListener inputListener;
 
     private final static int SCREEN_WIDTH = 700;
     private final static int SCREEN_LENGTH = 500;
@@ -42,8 +45,7 @@ public class BrickBreakerGameManager extends GameManager {
     private final static String COLLISION_SOUND = "assets/blop.wav";
     private final static String BACKGROUND_IMAGE = "assets/DARK_BG2_small.jpeg";
     private static final String[] strategyArray = {"ball","paddle","turbo","heart","double"};
-    private static final float BALL_SPEED = 150; // still a problem , should the manager now this ?
-    private UserInputListener inputListener;
+    //    private static final float BALL_SPEED = 150; // still a problem , should the manager know this ?
     private final HashSet<Puck> puckSet = new HashSet<>();
 //    private Brick[] brickArray;
 
@@ -59,38 +61,41 @@ public class BrickBreakerGameManager extends GameManager {
 
     /**
      * This method intializes the game.
-     * @param
+     * @param imageReader - the image reader
+     * @param soundReader - the sound reader
+     * @param inputListener - the input listener
+     * @param windowController - the window controller
      */
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        this.imageReader = imageReader;
-        this.soundReader = soundReader;
-        this.windowController = windowController;
-        this.inputListener = inputListener;
+        BrickBreakerGameManager.imageReader = imageReader;
+        BrickBreakerGameManager.soundReader = soundReader;
+        BrickBreakerGameManager.windowController = windowController;
+        BrickBreakerGameManager.inputListener = inputListener;
         WINDOW_DIMENSIONS = windowController.getWindowDimensions();
         CENTER = WINDOW_DIMENSIONS.mult((float)0.5);
         windowController.setTargetFramerate(80);
         //ball
-        createBall(imageReader,soundReader);
+        createBall();
         //paddle
-        createPaddle(imageReader,inputListener);
+        createPaddle();
         //createBuffers
         createBuffers();
         //create Bricks
-        brickBuilder(imageReader);
+        brickBuilder();
         //hearts
-        createLifeCount(imageReader);
+        createLifeCount();
         //background
-        createBackground(imageReader);
+        createBackground();
     }
 
 
 
     /**
      * This method updates the game's objects status .
-     * @param
+     * @param deltaTime - the time passed since the last update
      */
     @Override
     public void update(float deltaTime) {
@@ -126,7 +131,7 @@ public class BrickBreakerGameManager extends GameManager {
     /**
      * This method builds the  paddle of the game.
      */
-    private void createPaddle(ImageReader imageReader, UserInputListener inputListener) {
+    private void createPaddle() {
         Renderable paddleImg =
                 imageReader.readImage(PADDLE_IMAGE, false);
         Paddle paddle = new Paddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
@@ -141,7 +146,7 @@ public class BrickBreakerGameManager extends GameManager {
     /**
      * This method builds the default ball of the game.
      */
-    private void createBall(ImageReader imageReader, SoundReader soundReader) {
+    private void createBall() {
         Renderable ballImg =
                 imageReader.readImage(BALL_IMAGE, true);
         Renderable turboImg =
@@ -184,7 +189,7 @@ public class BrickBreakerGameManager extends GameManager {
     /**
      * This method builds all the bricks for the game.
      */
-    private void brickBuilder(ImageReader imageReader) {
+    private void brickBuilder() {
 //        brickArray = new Brick[(int)(BRICK_ROW_NUMBER * BRICK_COL_NUMBER)];
         float brickWidth = WINDOW_DIMENSIONS.x()/BRICK_COL_NUMBER;
         float newBrickCoordinate = 0;
@@ -211,6 +216,15 @@ public class BrickBreakerGameManager extends GameManager {
         }
     }
 
+
+    /**
+     * Determines and returns a collision strategy for the game.
+     * This method randomly selects between a basic collision strategy
+     * and a randomly chosen collision strategy.
+     *
+     * @return a CollisionStrategy object, either a BasicCollisionStrategy
+     *         or a randomly chosen collision strategy.
+     */
     private CollisionStrategy getCollisionStrategy() {
         Random rnd = new Random();
         if (rnd.nextBoolean()) {
@@ -221,6 +235,11 @@ public class BrickBreakerGameManager extends GameManager {
         }
     }
 
+    /**
+     * This method returns a random collision strategy for the game.
+     * @return a CollisionStrategy object, randomly chosen from the
+     *         available collision strategies.
+     */
     public CollisionStrategy randomCollisionStrategy() {
         Random rnd = new Random();
         int randInt = rnd.nextInt(5);
@@ -230,7 +249,7 @@ public class BrickBreakerGameManager extends GameManager {
     /**
      * This method builds all the hearts for the game.
      */
-    private void createLifeCount(ImageReader imageReader) {
+    private void createLifeCount() {
         Renderable lifeImg = imageReader.readImage(HEART_IMAGE, true);
         this.lifeCount = new LifeCount(
                 new Vector2(5,WINDOW_DIMENSIONS.y()-30),
@@ -243,7 +262,7 @@ public class BrickBreakerGameManager extends GameManager {
     /**
      * This method creates the background.
      */
-    private void createBackground(ImageReader imageReader) {
+    private void createBackground() {
         Renderable backgroundImage = imageReader.readImage(BACKGROUND_IMAGE, false);
         GameObject background = new GameObject(new Vector2(0, 0),new Vector2(WINDOW_DIMENSIONS.x(),
                 WINDOW_DIMENSIONS.y()),backgroundImage);
@@ -259,7 +278,7 @@ public class BrickBreakerGameManager extends GameManager {
         if(lifeCount.getLives()>0){
             if(ballHeight>WINDOW_DIMENSIONS.y()) {
                 lifeCount.decrementLife();
-                recenterBall(imageReader,soundReader);
+                recenterBall();
             }
         }
         else {
@@ -274,6 +293,10 @@ public class BrickBreakerGameManager extends GameManager {
         }
     }
 
+    /**
+     * This method checks if the win button is pressed.
+     * @return true if the win button is pressed, false otherwise.
+     */
     private boolean winButtonPressed() {
         return inputListener.isKeyPressed(KeyEvent.VK_W);
     }
@@ -281,9 +304,9 @@ public class BrickBreakerGameManager extends GameManager {
     /**
      * This method repositions the ball
      */
-    private void recenterBall(ImageReader imageReader,SoundReader soundReader) { // maybe it would be better to delete and recreate ?(time complexity ?)
+    private void recenterBall() { // maybe it would be better to delete and recreate ?(time complexity ?)
         gameObjects().removeGameObject(ball);
-        createBall(imageReader,soundReader);
+        createBall();
     }
 
     /**
@@ -298,10 +321,20 @@ public class BrickBreakerGameManager extends GameManager {
         }
     }
 
+    /**
+     * Removes a game object from the game.
+     * @param toRemove - the game object to remove
+     * @return true if the object was successfully removed, false otherwise.
+     */
     public boolean remove(GameObject toRemove) {
         return gameObjects().removeGameObject(toRemove);
     }
 
+
+    /**
+     * Creates a specified number of pucks and adds them to the game objects.
+     * @param numberOfBalls - the number of pucks to create.
+     */
     public void makePucks(int numberOfBalls) {
         Vector2 start = windowController.getWindowDimensions().mult(0.5f).
                 add(Puck.PUCK_SIZE.mult(-0.5f));
@@ -315,6 +348,9 @@ public class BrickBreakerGameManager extends GameManager {
         }
     }
 
+    /**
+     * Checks the status of the pucks and removes them if they are out of bounds.
+     */
     private void checkPucks() {
         for(Puck p : puckSet){
             if (p.getTopLeftCorner().y() < 0){
