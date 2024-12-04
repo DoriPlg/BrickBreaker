@@ -11,10 +11,13 @@ import java.util.Random;
 public class Ball extends GameObject {
     private static final float BALL_SPEED = 150;
     private static final Vector2 STANDARD_BALL_SIZE = new Vector2(50, 50);
+    private static final float TURBO_FACTOR = 1.4f;
+    private static final int HITS_IN_TURBO = 6;
     private final Sound collissionSound;
     private int collisions;
     private Renderable regularRender;
     private Renderable turboRender;
+    private int timeTurbo;
 
 
     public Ball(Vector2 startLoc, Renderable regularRenderable, Renderable turboRender, Sound collissionSound) {
@@ -36,11 +39,16 @@ public class Ball extends GameObject {
     }
 
     public void turboModeOn(){
-        this.setVelocity(new Vector2(0, 0));
+        if (getCollisionCounter() > HITS_IN_TURBO + timeTurbo) {
+            setVelocity(getVelocity().mult(TURBO_FACTOR));
+            renderer().setRenderable(turboRender);
+            timeTurbo = getCollisionCounter();
+        }
     }
 
     private void turboModeOff(){
-
+        setVelocity(getVelocity().mult(1/TURBO_FACTOR));
+        renderer().setRenderable(regularRender);
     }
 
     @Override
@@ -48,8 +56,11 @@ public class Ball extends GameObject {
         super.onCollisionEnter(other, collision);
         Vector2 newVel = getVelocity().flipped(collision.getNormal());
         setVelocity(newVel);
-        this.collisions++;
+        collisions++;
         collissionSound.play();
+        if (collisions > HITS_IN_TURBO + timeTurbo) {
+            turboModeOff();
+        }
     }
 
     public int getCollisionCounter(){
