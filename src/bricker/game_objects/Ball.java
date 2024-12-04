@@ -28,12 +28,9 @@ public class Ball extends GameObject {
         float ballVelX = BALL_SPEED;
         float ballVelY = BALL_SPEED;
         Random rand = new Random();
-        if (rand.nextBoolean()) {
-            ballVelX = -ballVelX;
-        }
-        if (rand.nextBoolean()) {
-            ballVelY = -ballVelY;
-        }
+        double angle = rand.nextDouble() * Math.PI;
+        ballVelY *= (float) Math.cos(angle);
+        ballVelX *= (float) Math.sin(angle);
         this.setVelocity(new Vector2(ballVelX, ballVelY));
         this.collisions = 0;
     }

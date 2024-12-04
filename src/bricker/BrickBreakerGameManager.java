@@ -301,7 +301,7 @@ public class BrickBreakerGameManager extends GameManager {
         }
     }
 
-    public void remove(GameObject toRemove) {
-        gameObjects().removeGameObject(toRemove);
+    public boolean remove(GameObject toRemove) {
+        return gameObjects().removeGameObject(toRemove);
     }
 }

@@ -18,7 +18,7 @@ public class MoreBallsCollisionStrategy implements CollisionStrategy {
     }
 
     @Override
-    public void onCollision(GameObject thisObj, GameObject otherObj) {
+    public boolean onCollision(GameObject thisObj, GameObject otherObj) {
         for (int i = 0; i < NUMBER_OF_BALLS; i++) {
             Puck fake = new Puck(start, fauxBallImg);
 //            objects.addGameObject(fake);

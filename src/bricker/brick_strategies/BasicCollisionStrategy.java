@@ -12,7 +12,7 @@ public class BasicCollisionStrategy implements CollisionStrategy {
     }
 
     @Override
-    public void onCollision(GameObject thisObj, GameObject otherObj) {
-        gameManager.remove(thisObj);
+    public boolean onCollision(GameObject thisObj, GameObject otherObj) {
+        return gameManager.remove(otherObj);
     }
 }

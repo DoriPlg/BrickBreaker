@@ -32,8 +32,9 @@ public class Brick extends GameObject {
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
         if (other instanceof Ball) {
-            brickCounter--;
-            collisionStrategy.onCollision(this, other);
+            if (collisionStrategy.onCollision(this, other)) {
+                brickCounter--;
+            }
         }
     }
 
