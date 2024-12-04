@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class Ball extends GameObject {
     private static final float BALL_SPEED = 150;
-    private static final Vector2 STANDARD_BALL_SIZE = new Vector2(50, 50);
+    public static final Vector2 STANDARD_BALL_SIZE = new Vector2(50, 50);
     private static final float TURBO_FACTOR = 1.4f;
     private static final int HITS_IN_TURBO = 6;
     private final Sound collissionSound;
