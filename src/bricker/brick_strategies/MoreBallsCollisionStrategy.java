@@ -4,24 +4,23 @@ import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import src.bricker.BrickBreakerGameManager;
 import src.bricker.game_objects.Puck;
 
-public class MoreBallsCollisionStrategy implements CollisionStrategy {
+public class MoreBallsCollisionStrategy extends BasicCollisionStrategy implements CollisionStrategy {
 
-    private final Vector2 start;
-    private final Renderable fauxBallImg;
     private static  final int NUMBER_OF_BALLS = 2;
 
-    public MoreBallsCollisionStrategy(Vector2 start, Renderable fauxBallImg){
-        this.start = start;
-        this.fauxBallImg = fauxBallImg;
+    public MoreBallsCollisionStrategy(BrickBreakerGameManager gameManager) {
+        super(gameManager);
     }
 
     @Override
     public boolean onCollision(GameObject thisObj, GameObject otherObj) {
-        for (int i = 0; i < NUMBER_OF_BALLS; i++) {
-            Puck fake = new Puck(start, fauxBallImg);
-//            objects.addGameObject(fake);
+        if(super.onCollision(thisObj, otherObj)){
+            gameManager.makePucks(NUMBER_OF_BALLS);
+            return true;
         }
+        return false;
     }
 }

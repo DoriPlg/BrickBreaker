@@ -10,12 +10,10 @@ import danogl.util.Vector2;
 import src.bricker.brick_strategies.BasicCollisionStrategy;
 import src.bricker.brick_strategies.CollisionFactory;
 import src.bricker.brick_strategies.CollisionStrategy;
-import src.bricker.game_objects.Ball;
-import src.bricker.game_objects.Brick;
-import src.bricker.game_objects.LifeCount;
-import src.bricker.game_objects.Paddle;
+import src.bricker.game_objects.*;
 
 import java.awt.event.KeyEvent;
+import java.util.HashSet;
 import java.util.Random;
 
 public class BrickBreakerGameManager extends GameManager {
@@ -46,6 +44,7 @@ public class BrickBreakerGameManager extends GameManager {
     private static final String[] strategyArray = {"ball","paddle","turbo","heart","double"};
     private static final float BALL_SPEED = 150; // still a problem , should the manager now this ?
     private UserInputListener inputListener;
+    private final HashSet<Puck> puckSet = new HashSet<>();
 //    private Brick[] brickArray;
 
 
@@ -97,10 +96,8 @@ public class BrickBreakerGameManager extends GameManager {
     public void update(float deltaTime) {
         super.update(deltaTime);
         float ballHeight = ball.getCenter().y();
-//        if (Brick.getLastDestroyed() >= 0){
-//            gameObjects().removeGameObject(brickArray[Brick.getLastDestroyed()]);
-//        }
 
+        checkPucks();
         checkGameEnd(ballHeight);
     }
 
@@ -303,5 +300,27 @@ public class BrickBreakerGameManager extends GameManager {
 
     public boolean remove(GameObject toRemove) {
         return gameObjects().removeGameObject(toRemove);
+    }
+
+    public void makePucks(int numberOfBalls) {
+        Vector2 start = windowController.getWindowDimensions().mult(0.5f).
+                add(Puck.PUCK_SIZE.mult(-0.5f));
+        Renderable puckImg = imageReader.readImage(PUCK_IMAGE, false);
+        Sound collisionSound = soundReader.readSound(COLLISION_SOUND);
+
+        for (int i = 0; i < numberOfBalls; i++) {
+            Puck puck = new Puck(start, puckImg, collisionSound);
+            gameObjects().addGameObject(puck);
+            puckSet.add(puck);
+        }
+    }
+
+    private void checkPucks() {
+        for(Puck p : puckSet){
+            if (p.getTopLeftCorner().y() < 0){
+                puckSet.remove(p);
+                gameObjects().removeGameObject(p);
+            }
+        }
     }
 }

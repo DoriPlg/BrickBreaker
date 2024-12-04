@@ -5,7 +5,7 @@ import danogl.collisions.GameObjectCollection;
 import src.bricker.BrickBreakerGameManager;
 
 public class BasicCollisionStrategy implements CollisionStrategy {
-    private final BrickBreakerGameManager gameManager;
+    protected final BrickBreakerGameManager gameManager;
 
     public BasicCollisionStrategy(BrickBreakerGameManager gameManager) {
         this.gameManager = gameManager;
