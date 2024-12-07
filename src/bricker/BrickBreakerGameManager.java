@@ -11,7 +11,6 @@ import src.bricker.brick_strategies.*;
 import src.bricker.game_objects.*;
 
 import java.awt.event.KeyEvent;
-import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -19,7 +18,6 @@ import java.util.Random;
  * updating game state, and handling game events.
  */
 public class BrickBreakerGameManager extends GameManager {
-    private static final int MAX_PUCKS = 10;
     private static Vector2 WINDOW_DIMENSIONS ;
     private static float BRICK_ROW_NUMBER = 7;
     private static float BRICK_COL_NUMBER = 8;
@@ -215,7 +213,7 @@ public class BrickBreakerGameManager extends GameManager {
      */
     private void brickBuilder() {
         float brickWidth = WINDOW_DIMENSIONS.x()/BRICK_COL_NUMBER;
-        float newBrickCoordinate = 0;
+        float newBrickCoordinate;
         Vector2 brickSize = new Vector2(
                 brickWidth,
                 Brick.BRICK_HEIGHT
