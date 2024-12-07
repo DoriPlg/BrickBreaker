@@ -1,0 +1,14 @@
+____,dori.plg
+____,207685306
+
+Q&A
+1 Describe the choice we made at 1.7, it's ups and downs
+2.1 Describe the implementation of lifeCount
+2.2 explain shortly about each Class added to the code for this need
+3 explain shortly about the special behaviours, explain about any classes created for this
+3.1 Heart
+3.2 MoreBalls
+3.3 MorePaddles
+3.4 Turbo
+4 Explain how you did the DoubleColi... with regards to code design and how you limited it to 3
+5 if during pt2 you made changes from pt1, explain why they were needed
