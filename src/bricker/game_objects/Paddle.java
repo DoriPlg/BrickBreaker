@@ -17,7 +17,6 @@ public class Paddle extends GameObject {
     private final float windowWidth;
 
     public static final String PADDLE = "paddle";
-    public static final String EXTRA_PADDLE = "extra paddle";
 
 
     /**

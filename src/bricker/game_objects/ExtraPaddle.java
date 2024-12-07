@@ -9,7 +9,8 @@ import danogl.gui.rendering.Renderable;
 public class ExtraPaddle extends Paddle {
 
     private int collisionCounter;
-    private static final String EXTRA_PADDLE = "extra paddle";
+
+    public static final String EXTRA_PADDLE = "extra paddle";
 
 
     /**
@@ -20,7 +21,7 @@ public class ExtraPaddle extends Paddle {
     */
     public ExtraPaddle(Renderable renderable, UserInputListener inputListener, float windowWidth)  {
         super(renderable, inputListener, windowWidth);
-        this.setTag(Paddle.EXTRA_PADDLE);
+        this.setTag(EXTRA_PADDLE);
         this.collisionCounter = 0;
     }
 
