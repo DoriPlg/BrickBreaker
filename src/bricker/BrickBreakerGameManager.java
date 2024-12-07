@@ -213,7 +213,7 @@ public class BrickBreakerGameManager extends GameManager {
      */
     private void brickBuilder() {
         float brickWidth = WINDOW_DIMENSIONS.x()/BRICK_COL_NUMBER;
-        float newBrickCoordinate;
+        float newBrickCoordinate; // initialized to 0 by default.
         Vector2 brickSize = new Vector2(
                 brickWidth,
                 Brick.BRICK_HEIGHT
