@@ -30,8 +30,6 @@ public class BrickBreakerGameManager extends GameManager {
     private SoundReader soundReader;
     private WindowController windowController;
     private UserInputListener inputListener;
-    // private static final String PADDLE = "paddle";
-    // private static final String EXTRA_PADDLE = "extra paddle";
 
     private static final int STARTING_NUMBER_OF_LIVES = 3;
     private final static int MAX_LIVES_NUMBER = 4;
@@ -140,23 +138,14 @@ public class BrickBreakerGameManager extends GameManager {
     /**
      * This method builds the main paddle of the game.
      * @param center - the center of the paddle
-     //* @param type - the type of the paddle, either "paddle" or "extra paddle"  (currently deprecated)
      */
-    private void createPaddle(Vector2 center){//, String type) { //maybe it should be better to separate extra
+    private void createPaddle(Vector2 center){
         Paddle paddle ;
         Renderable paddleImg =
                 imageReader.readImage(PADDLE_IMAGE, false);
-        // if(false && type.equals("EXTRA_PADDLE")){
-        //     this.extraPaddle = new ExtraPaddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
-        //     this.extraPaddle.setCenter(center);
-        //     gameObjects().addGameObject(this.extraPaddle);
-        // }
-        // else {
         paddle = new Paddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
-                // !!!!!!!!!!!!!!!!!
         paddle.setCenter(center);
         gameObjects().addGameObject(paddle);
-        // }
     }
 
 
@@ -170,16 +159,16 @@ public class BrickBreakerGameManager extends GameManager {
                 imageReader.readImage(TURBO_IMAGE, true);
         Sound collisionSound = soundReader.readSound(COLLISION_SOUND);
         this.ball = new Ball(CENTER, ballImg, turboImg,collisionSound); // !!!!!!!!!!!!!!!! nu e Ball ball
-        // this.ball = ball;
-        // ball.setTag("ball");
         gameObjects().addGameObject(this.ball);
     }
+
 
 
     /**
      * This method builds the walls of the game.
      */
-    // could improved with loop and finals for the position of the buffer
+    // could be improved with loop and finals for the position of the buffer?
+
     private void createBuffers(){
         //create right
         GameObject rightBuffer = new GameObject(
@@ -188,7 +177,6 @@ public class BrickBreakerGameManager extends GameManager {
                 NON_RENDERABLE
         );
         gameObjects().addGameObject(rightBuffer);
-
         //create left
         GameObject leftBuffer = new GameObject(
                 new Vector2(-1, 0),
@@ -205,7 +193,6 @@ public class BrickBreakerGameManager extends GameManager {
         gameObjects().addGameObject(topBuffer);
 
     }
-
 
     /**
      * This method builds all the bricks for the game.
@@ -334,7 +321,7 @@ public class BrickBreakerGameManager extends GameManager {
     /**
      * This method repositions the ball
      */
-    private void recenterBall() { // maybe it would be better to delete and recreate ?(time complexity ?)
+    private void recenterBall() {
         gameObjects().removeGameObject(ball);
         createBall();
     }
