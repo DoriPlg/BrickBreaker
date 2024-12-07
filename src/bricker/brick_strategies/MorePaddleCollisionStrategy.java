@@ -14,27 +14,39 @@ import java.util.Random;
 
 public class MorePaddleCollisionStrategy extends BasicCollisionStrategy implements CollisionStrategy {
 
-        /**
-         * constructor
-         */
-        public MorePaddleCollisionStrategy(BrickBreakerGameManager gameManager) {
-            super(gameManager);
-        }
+    /**
+     * Constructor for the MorePaddleCollisionStrategy
+     * @param gameManager the game manager that will be used in the strategy
+     */
+    public MorePaddleCollisionStrategy(BrickBreakerGameManager gameManager) {
+        super(gameManager);
+    }
 
+
+    /**
+     * Special action for the MorePaddleCollisionStrategy
+     * Should make an extra paddle in the game
+     * @param thisObj the object that will be used in the special action
+     * @param otherObj the other object that will be used in the special action
+     */
     @Override
     public void specialAction(GameObject thisObj, GameObject otherObj) {
         gameManager.makeExtraPaddle();
     }
 
     /**
-        * method that takes action in the case in which a brick with the extra paddle property was hit
-        */
-        @Override
-        public boolean onCollision(GameObject thisObj, GameObject otherObj) {
-            if(super.onCollision(thisObj, otherObj)){
-                specialAction(otherObj, thisObj);
-                return true;
-            }
-            return false;
+    * Overriden onCollision method for the MorePaddleCollisionStrategy
+    * Should call the special action of the strategy
+    * @param thisObj the object that will be used in the on collision
+    * @param otherObj the other object that will be used in the on collision
+    * @return true if the collision was successful, false otherwise
+    */
+    @Override
+    public boolean onCollision(GameObject thisObj, GameObject otherObj) {
+        if(super.onCollision(thisObj, otherObj)){
+            specialAction(otherObj, thisObj);
+            return true;
         }
+        return false;
+    }
 }

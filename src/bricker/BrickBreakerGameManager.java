@@ -47,7 +47,6 @@ public class BrickBreakerGameManager extends GameManager {
     private final static String HEART_IMAGE = "assets/heart.png";
     private final static String COLLISION_SOUND = "assets/blop.wav";
     private final static String BACKGROUND_IMAGE = "assets/DARK_BG2_small.jpeg";
-    private static final String[] strategyArray = {"ball","paddle","turbo","heart","double"};
 
 
     private final HashSet<Puck> puckSet = new HashSet<>();
@@ -266,7 +265,7 @@ public class BrickBreakerGameManager extends GameManager {
     public CollisionStrategy randomCollisionStrategy() {
         Random rnd = new Random();
         int randInt = rnd.nextInt(5);
-        return CollisionFactory.buildCollisionStrategy(strategyArray[randInt],this);
+        return CollisionFactory.buildCollisionStrategy(CollisionFactory.TYPES[randInt],this);
     }
 
 
@@ -390,6 +389,7 @@ public class BrickBreakerGameManager extends GameManager {
 
     /**
      * Checks the status of the pucks and removes them if they are out of bounds.
+     * TODO: PROBLEMATIC WITH RUNTIME! maybe doesn't delete the pucks...
      */
     private void checkPucks() {
         for(Puck p : puckSet){

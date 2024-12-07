@@ -5,39 +5,54 @@ import danogl.collisions.Collision;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 
-// not taking heart  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 public class ExtraPaddle extends Paddle {
 
-    private int collisionCounter ;
+    private int collisionCounter;
     private static final String EXTRA_PADDLE = "extra paddle";
 
 
     /**
-     Constructor of the extra Paddle class
-     */
+    * Constructor for the ExtraPaddle class
+    * @param renderable - the renderable object
+    * @param inputListener - the input listener
+    * @param windowWidth - the width of the window
+    */
     public ExtraPaddle(Renderable renderable, UserInputListener inputListener, float windowWidth)  {
         super(renderable, inputListener, windowWidth);
+        this.setTag(Paddle.EXTRA_PADDLE);
         this.collisionCounter = 0;
     }
 
     /**
-     Method that helps count the number of collisions
-     */
+    * Overrides the onCollisionEnter method from the GameObject class
+    * if the other object is a Ball, increments the collisionCounter
+    * @param other - the other GameObject
+    * @param collision - the collision object
+    */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision){
         super.onCollisionEnter(other, collision);
-        this.setTag(EXTRA_PADDLE);
-        if(other instanceof Ball ){ // e valabil si puck ???
-            this.collisionCounter=this.collisionCounter+1;
-        }
-
+        collisionCounter++;
     }
 
     /**
-     Method that returns the number of collisions
-     */
+     *  Overides the shouldCollide method from the GameObject class
+    * @param other - the other GameObject
+    * @return true if the other GameObject is a Ball, false otherwise
+    */
+    @Override
+    public boolean shouldCollideWith(GameObject other){
+        return other instanceof Ball;
+    }
+
+
+    /**
+    * Getter for the collisionCounter field
+    * @return the collisionCounter field
+    */
     public int getCollisionCounter(){
-        return this.collisionCounter;
+        return collisionCounter;
     }
 
 }

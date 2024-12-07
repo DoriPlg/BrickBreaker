@@ -36,17 +36,18 @@ public class Heart extends GameObject {
 
     /**
      * Defines the objects that the heart should collide with
+     * @param other the object to check for collision
+     * @return true if the object is a paddle, not an extraPaddle
      */
     @Override
     public boolean shouldCollideWith(GameObject other){
-        if(other.getTag().equals(Paddle.PADDLE)){
-            return true;
-        }
-        return false;
+        return other.getTag().equals(Paddle.PADDLE);
     }
 
     /**
      * Defines the objects behaviour on collision
+     * @param other the object that the heart collided with
+     * @param collision the collision object
      */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
@@ -56,7 +57,8 @@ public class Heart extends GameObject {
     }
 
     /**
-     * Updates the state of the heart with each frame
+     * Overrides the update method to remove the heart from the gameObjects collection
+     * when it reaches the top of the window
      */
     @Override
     public void update(float deltaTime) {

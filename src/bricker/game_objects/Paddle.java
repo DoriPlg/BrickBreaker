@@ -17,13 +17,18 @@ public class Paddle extends GameObject {
     private final float windowWidth;
 
     public static final String PADDLE = "paddle";
+    public static final String EXTRA_PADDLE = "extra paddle";
 
+
+    /**
+     * Constructor for the Paddle class
+     * @param renderable - the renderable object
+     * @param inputListener - the input listener
+     * @param windowWidth - the width of the window
+     */
     public Paddle(Renderable renderable,
                   UserInputListener inputListener,
                   float windowWidth) {
-        /*
-        Documentation:
-         */
         super(
                 new Vector2(START_PADDLE_POS_X,START_PADDLE_POS_Y),
                 new Vector2(START_PADDLE_WIDTH, START_PADDLE_HEIGHT),
@@ -34,6 +39,11 @@ public class Paddle extends GameObject {
         this.windowWidth = windowWidth;
     }
 
+
+    /**
+     * Updates the paddle's position based on the user input
+     * @param deltaTime - the time since the last update
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);

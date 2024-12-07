@@ -12,7 +12,9 @@ public class DoubleCollisionStartegy extends BasicCollisionStrategy implements C
     private final CollisionStrategy[] collisionStrategies;
 
     /**
-     * constructor
+     * Constructor for the DoubleCollisionStartegy
+     * Should generate the different strategies that will be used
+     * @param gameManager the game manager that will be used in the strategies
      */
     public DoubleCollisionStartegy(BrickBreakerGameManager gameManager){
         super(gameManager);
@@ -32,6 +34,13 @@ public class DoubleCollisionStartegy extends BasicCollisionStrategy implements C
         }
     }
 
+
+    /**
+     * Special action for the DoubleCollisionStartegy
+     * Should call the special action of each strategy
+     * @param thisObj the object that will be used in the special action
+     * @param otherObj the other object that will be used in the special action
+     */
     @Override
     public void specialAction(GameObject thisObj, GameObject otherObj) {
         for(CollisionStrategy strategy : collisionStrategies){
@@ -41,6 +50,14 @@ public class DoubleCollisionStartegy extends BasicCollisionStrategy implements C
         }
     }
 
+
+    /**
+     * On collision for the DoubleCollisionStartegy
+     * Should call the on collision of each strategy
+     * @param thisObj the object that will be used in the on collision
+     * @param otherObj the other object that will be used in the on collision
+     * @return true if the collision was successful, false otherwise
+     */
     @Override
     public boolean onCollision(GameObject thisObj, GameObject otherObj){
         if(super.onCollision(thisObj,otherObj)){

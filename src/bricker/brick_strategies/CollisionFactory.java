@@ -8,9 +8,12 @@ public class CollisionFactory {
     private static final String HEART = "heart";
     private static final String TURBO = "turbo";
     private static final String DOUBLE = "double";
+    public static final String[] TYPES = {EXTRA_BALL, EXTRA_PADDLE, HEART, TURBO, DOUBLE};
 
     /**
      * builds players according to the input
+     * @param type the type of the strategy to be built
+     * @param gameManager the game manager to be used in the strategy
      */
     public static CollisionStrategy buildCollisionStrategy(String type, BrickBreakerGameManager gameManager){
         CollisionStrategy collisionStrategy;
