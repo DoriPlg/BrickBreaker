@@ -1,7 +1,6 @@
 package src.bricker.brick_strategies;
 
 import src.bricker.BrickBreakerGameManager;
-
 public class CollisionFactory {
 
     private static final String EXTRA_BALL = "ball";
@@ -13,20 +12,23 @@ public class CollisionFactory {
     /**
      * builds players according to the input
      */
-    public static CollisionStrategy buildCollisionStrategy(String type, BrickBreakerGameManager gameManager) {
+    public static CollisionStrategy buildCollisionStrategy(String type, BrickBreakerGameManager gameManager){
         CollisionStrategy collisionStrategy;
         switch(type){
             case EXTRA_BALL:
-                collisionStrategy = new MoreBallsCollisionStrategy();
+                collisionStrategy = new MoreBallsCollisionStrategy(gameManager);
                 break;
             case EXTRA_PADDLE:
-                collisionStrategy = new MorePaddleCollisionStrategy();
+                collisionStrategy = new MorePaddleCollisionStrategy(gameManager);
                 break;
             case HEART:
-                collisionStrategy = new HeartCollisionStartegy();
+                collisionStrategy = new HeartCollisionStartegy(gameManager);
                 break;
             case DOUBLE:
-                collisionStrategy = new DoubleCollisionStartegy();
+                collisionStrategy = new DoubleCollisionStartegy(gameManager);
+                break;
+            case TURBO:
+                collisionStrategy = new TurboCollisionStrategy(gameManager);
                 break;
             default:
                 collisionStrategy = null;

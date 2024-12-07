@@ -16,6 +16,8 @@ public class Paddle extends GameObject {
     private final UserInputListener inputListener;
     private final float windowWidth;
 
+    public static final String PADDLE = "paddle";
+
     public Paddle(Renderable renderable,
                   UserInputListener inputListener,
                   float windowWidth) {
@@ -27,6 +29,7 @@ public class Paddle extends GameObject {
                 new Vector2(START_PADDLE_WIDTH, START_PADDLE_HEIGHT),
                 renderable
         );
+        this.setTag(PADDLE);
         this.inputListener = inputListener;
         this.windowWidth = windowWidth;
     }

@@ -5,37 +5,31 @@ import danogl.collisions.GameObjectCollection;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import src.bricker.BrickBreakerGameManager;
 import src.bricker.game_objects.Ball;
 import src.bricker.game_objects.Brick;
 import src.bricker.game_objects.Paddle;
 
 import java.util.Random;
 
-public class MorePaddleCollisionStrategy implements CollisionStrategy {
+public class MorePaddleCollisionStrategy extends BasicCollisionStrategy implements CollisionStrategy {
 
-    private final Renderable paddleImg;
-    private final Vector2 windowSize;
-    private final UserInputListener inputListener;
+        /**
+         * constructor
+         */
+        public MorePaddleCollisionStrategy(BrickBreakerGameManager gameManager) {
+            super(gameManager);
+        }
 
-    public MorePaddleCollisionStrategy(Renderable paddleImg,
-                                       Vector2 windowSize,
-                                       UserInputListener inputListener
-    ) {
-        super();
-        this.paddleImg = paddleImg;
-        this.windowSize = windowSize;
-        this.inputListener = inputListener;
-    }
-
-    @Override
-    public boolean onCollision(GameObject thisObj, GameObject otherObj) {
-        Paddle paddle = new Paddle(paddleImg, inputListener, windowSize.x());
-        Random rnd = new Random();
-        float random = rnd.nextFloat(0,1);
-        paddle.setCenter(
-                new Vector2(paddle.getDimensions().x()/2 +
-                        (windowSize.x()-paddle.getDimensions().x()) * random, windowSize.y() - 30)
-        );
-//        objects.addGameObject(paddle);
-    }
+        /**
+        * method that takes action in the case in which a brick with the extra paddle property was hit
+        */
+        @Override
+        public boolean onCollision(GameObject thisObj, GameObject otherObj) {
+            if(super.onCollision(thisObj, otherObj)){
+                gameManager.makeExtraPaddle();
+                return true;
+            }
+            return false;
+        }
 }

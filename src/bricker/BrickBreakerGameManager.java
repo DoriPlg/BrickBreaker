@@ -7,9 +7,7 @@ import danogl.components.CoordinateSpace;
 import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import src.bricker.brick_strategies.BasicCollisionStrategy;
-import src.bricker.brick_strategies.CollisionFactory;
-import src.bricker.brick_strategies.CollisionStrategy;
+import src.bricker.brick_strategies.*;
 import src.bricker.game_objects.*;
 
 import java.awt.event.KeyEvent;
@@ -24,15 +22,20 @@ public class BrickBreakerGameManager extends GameManager {
     private static Vector2 WINDOW_DIMENSIONS ;
     private static float BRICK_ROW_NUMBER = 7;
     private static float BRICK_COL_NUMBER = 8;
-    private  Ball ball = null;
+    private Ball ball = null;
     private LifeCount lifeCount;
+    private Renderable lifeImg;
+    private ExtraPaddle extraPaddle;
     private static final int STARTING_NUMBER_OF_LIVES = 3;
     private static Vector2 CENTER = null;
     private static ImageReader imageReader;
     private static SoundReader soundReader;
     private static WindowController windowController;
     private static UserInputListener inputListener;
+    private static final String PADDLE = "paddle";
+    private static final String EXTRA_PADDLE = "extra paddle";
 
+    private final static int MAX_LIVES_NUMBER = 4;
     private final static int SCREEN_WIDTH = 700;
     private final static int SCREEN_LENGTH = 500;
     private final static Renderable NON_RENDERABLE = null;
@@ -45,6 +48,8 @@ public class BrickBreakerGameManager extends GameManager {
     private final static String COLLISION_SOUND = "assets/blop.wav";
     private final static String BACKGROUND_IMAGE = "assets/DARK_BG2_small.jpeg";
     private static final String[] strategyArray = {"ball","paddle","turbo","heart","double"};
+
+
     //    private static final float BALL_SPEED = 150; // still a problem , should the manager know this ?
     private final HashSet<Puck> puckSet = new HashSet<>();
 //    private Brick[] brickArray;
@@ -69,6 +74,7 @@ public class BrickBreakerGameManager extends GameManager {
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
+        this.lifeImg = imageReader.readImage(HEART_IMAGE, true);
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         BrickBreakerGameManager.imageReader = imageReader;
         BrickBreakerGameManager.soundReader = soundReader;
@@ -80,7 +86,8 @@ public class BrickBreakerGameManager extends GameManager {
         //ball
         createBall();
         //paddle
-        createPaddle();
+        Vector2 center = new Vector2(WINDOW_DIMENSIONS.x()/2, WINDOW_DIMENSIONS.y() - 30);
+        createPaddle(center,PADDLE);
         //createBuffers
         createBuffers();
         //create Bricks
@@ -101,7 +108,11 @@ public class BrickBreakerGameManager extends GameManager {
     public void update(float deltaTime) {
         super.update(deltaTime);
         float ballHeight = ball.getCenter().y();
-
+        if(this.extraPaddle!=null){
+            if(this.extraPaddle.getCollisionCounter()>=4){
+                remove(extraPaddle);
+            }
+        }
         checkPucks();
         checkGameEnd(ballHeight);
     }
@@ -131,14 +142,21 @@ public class BrickBreakerGameManager extends GameManager {
     /**
      * This method builds the  paddle of the game.
      */
-    private void createPaddle() {
+    private void createPaddle(Vector2 center, String type) { //maybe it should be better to separate extra
+        Paddle paddle ;
         Renderable paddleImg =
                 imageReader.readImage(PADDLE_IMAGE, false);
-        Paddle paddle = new Paddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
-        paddle.setCenter(
-                new Vector2(WINDOW_DIMENSIONS.x()/2, WINDOW_DIMENSIONS.y() - 30)
-        );
-        gameObjects().addGameObject(paddle);
+        if(type.equals(EXTRA_PADDLE)){
+            this.extraPaddle = new ExtraPaddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
+            this.extraPaddle.setCenter(center);
+            gameObjects().addGameObject(this.extraPaddle);
+        }
+        else {
+            paddle = new Paddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
+                 // !!!!!!!!!!!!!!!!!
+            paddle.setCenter(center);
+            gameObjects().addGameObject(paddle);
+        }
     }
 
 
@@ -154,12 +172,14 @@ public class BrickBreakerGameManager extends GameManager {
         Sound collisionSound = soundReader.readSound(COLLISION_SOUND);
         Ball ball = new Ball(CENTER, ballImg, turboImg,collisionSound); // !!!!!!!!!!!!!!!! nu e Ball ball
         this.ball = ball;
+        ball.setTag("ball");
         gameObjects().addGameObject(ball);
     }
 
     /**
      * This method builds the walls of the game.
      */
+    // could improved with loop and finals for the position of the buffer
     private void createBuffers(){
         //create right
         GameObject rightBuffer = new GameObject(
@@ -226,13 +246,14 @@ public class BrickBreakerGameManager extends GameManager {
      *         or a randomly chosen collision strategy.
      */
     private CollisionStrategy getCollisionStrategy() {
-        Random rnd = new Random();
-        if (rnd.nextBoolean()) {
-            return new BasicCollisionStrategy(this);
-        }
-        else {
-            return randomCollisionStrategy();
-        }
+        return new DoubleCollisionStartegy(this);
+//        Random rnd = new Random();
+//        if (rnd.nextBoolean()) {
+//            return new BasicCollisionStrategy(this);
+//        }
+//        else {
+//            return randomCollisionStrategy();
+//        }
     }
 
     /**
@@ -243,17 +264,16 @@ public class BrickBreakerGameManager extends GameManager {
     public CollisionStrategy randomCollisionStrategy() {
         Random rnd = new Random();
         int randInt = rnd.nextInt(5);
-        return CollisionFactory.buildCollisionStrategy(strategyArray[randInt], this);
+        return CollisionFactory.buildCollisionStrategy(strategyArray[randInt],this);
     }
 
     /**
      * This method builds all the hearts for the game.
      */
     private void createLifeCount() {
-        Renderable lifeImg = imageReader.readImage(HEART_IMAGE, true);
         this.lifeCount = new LifeCount(
                 new Vector2(5,WINDOW_DIMENSIONS.y()-30),
-                lifeImg,
+                this.lifeImg,
                 STARTING_NUMBER_OF_LIVES
         );
         gameObjects().addGameObject(lifeCount,Layer.UI);
@@ -278,6 +298,7 @@ public class BrickBreakerGameManager extends GameManager {
         if(lifeCount.getLives()>0){
             if(ballHeight>WINDOW_DIMENSIONS.y()) {
                 lifeCount.decrementLife();
+                System.out.println(lifeCount.getLives());
                 recenterBall();
             }
         }
@@ -308,7 +329,7 @@ public class BrickBreakerGameManager extends GameManager {
         gameObjects().removeGameObject(ball);
         createBall();
     }
-
+    // ai metoda remove pt ce e mai sus !!!!!!!!!!!!
     /**
      * Shows the desired game end prompt
      */
@@ -338,7 +359,7 @@ public class BrickBreakerGameManager extends GameManager {
     public void makePucks(int numberOfBalls) {
         Vector2 start = windowController.getWindowDimensions().mult(0.5f).
                 add(Puck.PUCK_SIZE.mult(-0.5f));
-        Renderable puckImg = imageReader.readImage(PUCK_IMAGE, false);
+        Renderable puckImg = imageReader.readImage(PUCK_IMAGE, true);
         Sound collisionSound = soundReader.readSound(COLLISION_SOUND);
 
         for (int i = 0; i < numberOfBalls; i++) {
@@ -357,6 +378,30 @@ public class BrickBreakerGameManager extends GameManager {
                 puckSet.remove(p);
                 gameObjects().removeGameObject(p);
             }
+        }
+    }
+
+    /**
+     * Build a new paddle
+     */
+    public void makeExtraPaddle(){
+        if(this.extraPaddle==null) {
+            Vector2 extraPaddleCenter = new Vector2(WINDOW_DIMENSIONS.x() / 2,
+                    WINDOW_DIMENSIONS.y() / 2);
+            createPaddle(extraPaddleCenter, EXTRA_PADDLE);
+        }
+    }
+
+    /**
+     * Builds a new heart
+     */
+    public void makeHeart(Vector2 center) {
+        if(lifeCount.getLives()<4){
+             Heart heart = new Heart(
+                    center,new Vector2(20,20),
+                    this.lifeImg,this.gameObjects(),this.lifeCount, WINDOW_DIMENSIONS.y());
+            heart.setCenter(center);
+            gameObjects().addGameObject(heart);
         }
     }
 }

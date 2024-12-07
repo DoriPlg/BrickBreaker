@@ -11,6 +11,9 @@ public class MoreBallsCollisionStrategy extends BasicCollisionStrategy implement
 
     private static  final int NUMBER_OF_BALLS = 2;
 
+    /**
+     * cosntructor
+     */
     public MoreBallsCollisionStrategy(BrickBreakerGameManager gameManager) {
         super(gameManager);
     }

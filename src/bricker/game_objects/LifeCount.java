@@ -11,6 +11,7 @@ public class LifeCount extends GameObject {
     private static final Color YELLOW = Color.YELLOW;
     private static final Color RED = Color.RED;
     private static final Vector2 RENDER_SIZE = new Vector2(20, 20);
+    private final static int LIVES_UPPER_LIMIT = 4;
 
     private TextRenderable text;
     private int lives;
@@ -24,22 +25,22 @@ public class LifeCount extends GameObject {
 
     @Override
     public void render(Graphics2D g)
-    /*
-    * Renders the life count on the screen,
-    * by drawing the heart image multiple times
-    */
-   {
-       if(lives>=3){
-           text.setColor(GREEN);
-       }
-       else if(lives==2){
-           text.setColor(YELLOW);
-       }
-       else if(lives==1){
-           text.setColor(RED);
-       }
-       text.setString(String.valueOf(lives));
-       text.render(g, getTopLeftCorner(), RENDER_SIZE);
+        /*
+         * Renders the life count on the screen,
+         * by drawing the heart image multiple times
+         */
+    {
+        if(lives>=3){
+            text.setColor(GREEN);
+        }
+        else if(lives==2){
+            text.setColor(YELLOW);
+        }
+        else if(lives==1){
+            text.setColor(RED);
+        }
+        text.setString(String.valueOf(lives));
+        text.render(g, getTopLeftCorner(), RENDER_SIZE);
         for (int i = 0; i < lives; i++) {
             renderer().getRenderable().render(g,
                     new Vector2(getTopLeftCorner().x() + RENDER_SIZE.mult(2f).x() + i * (int) RENDER_SIZE.x(),
@@ -47,19 +48,22 @@ public class LifeCount extends GameObject {
                     getDimensions()
             );
         }
-   }
-
+    }
 
     public void decrementLife() {
         lives--;
     }
 
     public void incrementLife() {
-        lives++;
+        if(this.lives<LIVES_UPPER_LIMIT){
+            lives++;
+        }
     }
 
     public int getLives() {
         return lives;
     }
+
+
 
 }

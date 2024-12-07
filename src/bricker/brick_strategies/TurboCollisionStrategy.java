@@ -14,8 +14,8 @@ public class TurboCollisionStrategy extends BasicCollisionStrategy implements Co
     @Override
     public boolean onCollision(GameObject thisObj, GameObject otherObj) {
         if (super.onCollision(thisObj, otherObj)) {
-            if (!(otherObj instanceof Puck) && otherObj instanceof Ball ball) {
-                ball.turboModeOn();
+            if (!(otherObj instanceof Puck) && (otherObj instanceof Ball)) {
+                ((Ball)otherObj).turboModeOn();
             }
             return true;
         }

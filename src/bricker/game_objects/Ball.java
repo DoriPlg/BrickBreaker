@@ -18,6 +18,8 @@ public class Ball extends GameObject {
     private final Renderable turboRender;
     private int collisions;
     private int timeTurbo;
+    private boolean turboMode;
+
 
 
     public Ball(Vector2 startLoc, Renderable regularRenderable, Renderable turboRender, Sound collissionSound) {
@@ -33,19 +35,24 @@ public class Ball extends GameObject {
         ballVelX *= (float) Math.sin(angle);
         this.setVelocity(new Vector2(ballVelX, ballVelY));
         this.collisions = 0;
+        this.turboMode = false;
     }
 
     public void turboModeOn(){
-        if (getCollisionCounter() > HITS_IN_TURBO + timeTurbo) {
+        if (!turboMode) {
             setVelocity(getVelocity().mult(TURBO_FACTOR));
             renderer().setRenderable(turboRender);
             timeTurbo = getCollisionCounter();
+            this.turboMode = true;
         }
     }
 
     private void turboModeOff(){
-        setVelocity(getVelocity().mult(1/TURBO_FACTOR));
-        renderer().setRenderable(regularRender);
+        if(turboMode){
+            setVelocity(getVelocity().mult(1/TURBO_FACTOR));
+            renderer().setRenderable(regularRender);
+            this.turboMode = false;
+        }
     }
 
     @Override
@@ -55,7 +62,7 @@ public class Ball extends GameObject {
         setVelocity(newVel);
         collisions++;
         collissionSound.play();
-        if (collisions > HITS_IN_TURBO + timeTurbo) {
+        if (collisions > HITS_IN_TURBO + timeTurbo && turboMode) {
             turboModeOff();
         }
     }
