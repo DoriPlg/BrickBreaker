@@ -295,7 +295,6 @@ public class BrickBreakerGameManager extends GameManager {
         if(lifeCount.getLives()>0){
             if(ballHeight>WINDOW_DIMENSIONS.y()) {
                 lifeCount.decrementLife();
-                // System.out.println(lifeCount.getLives());
                 recenterBall();
             }
         }
@@ -325,10 +324,9 @@ public class BrickBreakerGameManager extends GameManager {
      * This method repositions the ball
      */
     private void recenterBall() {
-        gameObjects().removeGameObject(ball);
+        remove(ball);
         createBall();
     }
-    // ai metoda remove pt ce e mai sus !!!!!!!!!!!!
 
 
     /**
