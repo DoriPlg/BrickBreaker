@@ -19,4 +19,5 @@ Q&A
 
 5 One main change we made, is shifting the responsibility for deleting hit bricks from the brick and game manager to the collision strategy, to allow for special collision strategies and to validate wether the main ball hit or a puck. 
 To facilitate turboMode's renderable, we added another field to Ball's constructor.
+We also added a sepcialStrategy to CollisionStrategy's API, to allow special strategies even when the brick is destroyed only once.
 Also many attributes were publicized, mainly dimensions and constants.
