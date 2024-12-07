@@ -101,17 +101,20 @@ public class BrickBreakerGameManager extends GameManager {
      * @param args - the arguments of the game, as follows:
      * args[0] - number of bricks in row(col count)
      * args[1] - number of rows
-     * args[2] - win streak
-     * args[3] - renderer type
-     * args[4] - player 1 name
-     * args[5] - player 2 name
      */
     public static void main(String[] args) {
         BrickBreakerGameManager game = new BrickBreakerGameManager("Bricker",
                 new Vector2(SCREEN_WIDTH, SCREEN_LENGTH));
         if(args.length!=0){
-            BRICK_COL_NUMBER = Integer.parseInt(args[0]);
-            BRICK_ROW_NUMBER = Integer.parseInt(args[1]);
+            if (args.length==2) {
+                BRICK_COL_NUMBER = Integer.parseInt(args[0]);
+                BRICK_ROW_NUMBER = Integer.parseInt(args[1]);
+            }
+            else{
+                System.out.println("Invalid number of arguments.");
+                System.out.println("Usage: java BrickBreakerGameManager <bricks_per_row> <rows>");
+                System.exit(0);
+            }
         }
         game.run();
     }
