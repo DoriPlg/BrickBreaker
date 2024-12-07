@@ -19,9 +19,14 @@ public class MoreBallsCollisionStrategy extends BasicCollisionStrategy implement
     }
 
     @Override
+    public void specialAction(GameObject thisObj, GameObject otherObj) {
+        gameManager.makePucks(NUMBER_OF_BALLS);
+    }
+
+    @Override
     public boolean onCollision(GameObject thisObj, GameObject otherObj) {
         if(super.onCollision(thisObj, otherObj)){
-            gameManager.makePucks(NUMBER_OF_BALLS);
+            specialAction(thisObj, otherObj);
             return true;
         }
         return false;

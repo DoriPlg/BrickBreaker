@@ -14,9 +14,14 @@ public class HeartCollisionStartegy extends BasicCollisionStrategy implements Co
     }
 
     @Override
+    public void specialAction(GameObject thisObj, GameObject otherObj) {
+        gameManager.makeHeart(thisObj.getCenter());
+    }
+
+    @Override
     public boolean onCollision(GameObject thisObj, GameObject otherObj) {
         if(super.onCollision(thisObj, otherObj)){
-            gameManager.makeHeart(thisObj.getCenter());
+            specialAction(otherObj, thisObj);
             return true;
         }
         return false;

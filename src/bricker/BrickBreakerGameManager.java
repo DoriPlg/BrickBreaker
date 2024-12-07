@@ -228,9 +228,7 @@ public class BrickBreakerGameManager extends GameManager {
                         brickSize,
                         brickImg,
                         getCollisionStrategy()
-//                        index
                 );
-//                brickArray[index++] = brick;
                 gameObjects().addGameObject(brick);
             }
         }
@@ -246,14 +244,13 @@ public class BrickBreakerGameManager extends GameManager {
      *         or a randomly chosen collision strategy.
      */
     private CollisionStrategy getCollisionStrategy() {
-        return new DoubleCollisionStartegy(this);
-//        Random rnd = new Random();
-//        if (rnd.nextBoolean()) {
-//            return new BasicCollisionStrategy(this);
-//        }
-//        else {
-//            return randomCollisionStrategy();
-//        }
+        Random rnd = new Random();
+        if (rnd.nextBoolean()) {
+            return new BasicCollisionStrategy(this);
+        }
+        else {
+            return randomCollisionStrategy();
+        }
     }
 
     /**

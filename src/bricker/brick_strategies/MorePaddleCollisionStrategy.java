@@ -21,13 +21,18 @@ public class MorePaddleCollisionStrategy extends BasicCollisionStrategy implemen
             super(gameManager);
         }
 
-        /**
+    @Override
+    public void specialAction(GameObject thisObj, GameObject otherObj) {
+        gameManager.makeExtraPaddle();
+    }
+
+    /**
         * method that takes action in the case in which a brick with the extra paddle property was hit
         */
         @Override
         public boolean onCollision(GameObject thisObj, GameObject otherObj) {
             if(super.onCollision(thisObj, otherObj)){
-                gameManager.makeExtraPaddle();
+                specialAction(otherObj, thisObj);
                 return true;
             }
             return false;

@@ -12,8 +12,13 @@ public class BasicCollisionStrategy implements CollisionStrategy {
     }
 
     @Override
+    public void specialAction(GameObject thisObj, GameObject otherObj) {
+        return;
+    }
+
+    @Override
     public boolean onCollision(GameObject thisObj, GameObject otherObj) {
-        return gameManager.remove(thisObj);// if it's written other the ball disappears
+        return gameManager.remove(thisObj);
 
     }
 }

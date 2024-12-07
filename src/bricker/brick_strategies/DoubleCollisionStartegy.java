@@ -33,13 +33,18 @@ public class DoubleCollisionStartegy extends BasicCollisionStrategy implements C
     }
 
     @Override
+    public void specialAction(GameObject thisObj, GameObject otherObj) {
+        for(CollisionStrategy strategy : collisionStrategies){
+            if(strategy!=null){
+                strategy.specialAction(thisObj,otherObj);
+            }
+        }
+    }
+
+    @Override
     public boolean onCollision(GameObject thisObj, GameObject otherObj){
         if(super.onCollision(thisObj,otherObj)){
-            for(CollisionStrategy strategy : collisionStrategies){
-                if(strategy!=null){
-                    strategy.onCollision(thisObj,otherObj);
-                }
-            }
+            specialAction(thisObj, otherObj);
             return true;
         }
         return false;
