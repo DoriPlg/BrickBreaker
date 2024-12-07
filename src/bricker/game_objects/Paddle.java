@@ -1,6 +1,5 @@
 package src.bricker.game_objects;
 import danogl.GameObject;
-import danogl.collisions.Collision;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
