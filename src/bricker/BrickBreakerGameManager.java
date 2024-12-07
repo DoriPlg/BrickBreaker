@@ -19,6 +19,7 @@ import java.util.Random;
  * updating game state, and handling game events.
  */
 public class BrickBreakerGameManager extends GameManager {
+    private static final int MAX_PUCKS = 10;
     private static Vector2 WINDOW_DIMENSIONS ;
     private static float BRICK_ROW_NUMBER = 7;
     private static float BRICK_COL_NUMBER = 8;
@@ -49,7 +50,6 @@ public class BrickBreakerGameManager extends GameManager {
     private final static String BACKGROUND_IMAGE = "assets/DARK_BG2_small.jpeg";
 
 
-    private final HashSet<Puck> puckSet = new HashSet<>();
 
 
 
@@ -135,7 +135,6 @@ public class BrickBreakerGameManager extends GameManager {
                 remove(extraPaddle);
             }
         }
-        checkPucks();
         checkGameEnd(ballHeight);
     }
 
@@ -143,7 +142,7 @@ public class BrickBreakerGameManager extends GameManager {
     /**
      * This method builds the main paddle of the game.
      * @param center - the center of the paddle
-     * @param type - the type of the paddle, either "paddle" or "extra paddle"  (currently deprecated)
+     //* @param type - the type of the paddle, either "paddle" or "extra paddle"  (currently deprecated)
      */
     private void createPaddle(Vector2 center){//, String type) { //maybe it should be better to separate extra
         Paddle paddle ;
@@ -371,6 +370,15 @@ public class BrickBreakerGameManager extends GameManager {
 
 
     /**
+     * Getter for the bottom of the screen.
+     * @return the bottom of the screen
+     */
+    public float getScreenBottom(){
+        return windowController.getWindowDimensions().y();
+    }
+
+
+    /**
      * Creates a specified number of pucks and adds them to the game objects.
      * @param numberOfBalls - the number of pucks to create.
      */
@@ -381,24 +389,11 @@ public class BrickBreakerGameManager extends GameManager {
         Sound collisionSound = soundReader.readSound(COLLISION_SOUND);
 
         for (int i = 0; i < numberOfBalls; i++) {
-            Puck puck = new Puck(start, puckImg, collisionSound);
+            Puck puck = new Puck(start, puckImg, collisionSound, this);
             gameObjects().addGameObject(puck);
-            puckSet.add(puck);
         }
     }
 
-    /**
-     * Checks the status of the pucks and removes them if they are out of bounds.
-     * TODO: PROBLEMATIC WITH RUNTIME! maybe doesn't delete the pucks...
-     */
-    private void checkPucks() {
-        for(Puck p : puckSet){
-            if (p.getTopLeftCorner().y() < 0){
-                puckSet.remove(p);
-                gameObjects().removeGameObject(p);
-            }
-        }
-    }
 
     /**
      * Build an extra paddle, if it doesn't already exist.
