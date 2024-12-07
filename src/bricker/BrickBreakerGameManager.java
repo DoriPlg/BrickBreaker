@@ -26,15 +26,15 @@ public class BrickBreakerGameManager extends GameManager {
     private LifeCount lifeCount;
     private Renderable lifeImg;
     private ExtraPaddle extraPaddle;
-    private static final int STARTING_NUMBER_OF_LIVES = 3;
-    private static Vector2 CENTER = null;
-    private static ImageReader imageReader;
-    private static SoundReader soundReader;
-    private static WindowController windowController;
-    private static UserInputListener inputListener;
-    private static final String PADDLE = "paddle";
-    private static final String EXTRA_PADDLE = "extra paddle";
+    private Vector2 CENTER = null;
+    private ImageReader imageReader;
+    private SoundReader soundReader;
+    private WindowController windowController;
+    private UserInputListener inputListener;
+    // private static final String PADDLE = "paddle";
+    // private static final String EXTRA_PADDLE = "extra paddle";
 
+    private static final int STARTING_NUMBER_OF_LIVES = 3;
     private final static int MAX_LIVES_NUMBER = 4;
     private final static int SCREEN_WIDTH = 700;
     private final static int SCREEN_LENGTH = 500;
@@ -50,14 +50,14 @@ public class BrickBreakerGameManager extends GameManager {
     private static final String[] strategyArray = {"ball","paddle","turbo","heart","double"};
 
 
-    //    private static final float BALL_SPEED = 150; // still a problem , should the manager know this ?
     private final HashSet<Puck> puckSet = new HashSet<>();
-//    private Brick[] brickArray;
 
 
 
     /**
      * Default Constructor.
+     * @param windowTitle - the title of the window
+     * @param windowDimensions - the dimensions of the window
      */
     public BrickBreakerGameManager(String windowTitle, Vector2 windowDimensions) {
         super(windowTitle, windowDimensions);
@@ -66,6 +66,7 @@ public class BrickBreakerGameManager extends GameManager {
 
     /**
      * This method intializes the game.
+     * It creates the game objects and sets the game's parameters.
      * @param imageReader - the image reader
      * @param soundReader - the sound reader
      * @param inputListener - the input listener
@@ -76,10 +77,10 @@ public class BrickBreakerGameManager extends GameManager {
                                UserInputListener inputListener, WindowController windowController) {
         this.lifeImg = imageReader.readImage(HEART_IMAGE, true);
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        BrickBreakerGameManager.imageReader = imageReader;
-        BrickBreakerGameManager.soundReader = soundReader;
-        BrickBreakerGameManager.windowController = windowController;
-        BrickBreakerGameManager.inputListener = inputListener;
+        this.imageReader = imageReader;
+        this.soundReader = soundReader;
+        this.windowController = windowController;
+        this.inputListener = inputListener;
         WINDOW_DIMENSIONS = windowController.getWindowDimensions();
         CENTER = WINDOW_DIMENSIONS.mult((float)0.5);
         windowController.setTargetFramerate(80);
@@ -87,7 +88,7 @@ public class BrickBreakerGameManager extends GameManager {
         createBall();
         //paddle
         Vector2 center = new Vector2(WINDOW_DIMENSIONS.x()/2, WINDOW_DIMENSIONS.y() - 30);
-        createPaddle(center,PADDLE);
+        createPaddle(center);//,"PADDLE");
         //createBuffers
         createBuffers();
         //create Bricks
@@ -99,27 +100,10 @@ public class BrickBreakerGameManager extends GameManager {
     }
 
 
-
-    /**
-     * This method updates the game's objects status .
-     * @param deltaTime - the time passed since the last update
-     */
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-        float ballHeight = ball.getCenter().y();
-        if(this.extraPaddle!=null){
-            if(this.extraPaddle.getCollisionCounter()>=4){
-                remove(extraPaddle);
-            }
-        }
-        checkPucks();
-        checkGameEnd(ballHeight);
-    }
-
-
     /**
      * the Main method of the game
+     * It creates a new BrickBreakerGameManager object and runs the game.
+     * @param args - the arguments of the game, as follows:
      * args[0] - number of bricks in row(col count)
      * args[1] - number of rows
      * args[2] - win streak
@@ -138,27 +122,46 @@ public class BrickBreakerGameManager extends GameManager {
     }
 
 
+    /**
+     * This method overrides the update method of the GameManager class.
+     * It updates the game state.
+     * @param deltaTime - the time passed since the last update
+     */
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        float ballHeight = ball.getCenter().y();
+        if(this.extraPaddle!=null){
+            if(this.extraPaddle.getCollisionCounter()>=4){
+                remove(extraPaddle);
+            }
+        }
+        checkPucks();
+        checkGameEnd(ballHeight);
+    }
+
 
     /**
-     * This method builds the  paddle of the game.
+     * This method builds the main paddle of the game.
+     * @param center - the center of the paddle
+     * @param type - the type of the paddle, either "paddle" or "extra paddle"  (currently deprecated)
      */
-    private void createPaddle(Vector2 center, String type) { //maybe it should be better to separate extra
+    private void createPaddle(Vector2 center){//, String type) { //maybe it should be better to separate extra
         Paddle paddle ;
         Renderable paddleImg =
                 imageReader.readImage(PADDLE_IMAGE, false);
-        if(type.equals(EXTRA_PADDLE)){
-            this.extraPaddle = new ExtraPaddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
-            this.extraPaddle.setCenter(center);
-            gameObjects().addGameObject(this.extraPaddle);
-        }
-        else {
-            paddle = new Paddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
-                 // !!!!!!!!!!!!!!!!!
-            paddle.setCenter(center);
-            gameObjects().addGameObject(paddle);
-        }
+        // if(false && type.equals("EXTRA_PADDLE")){
+        //     this.extraPaddle = new ExtraPaddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
+        //     this.extraPaddle.setCenter(center);
+        //     gameObjects().addGameObject(this.extraPaddle);
+        // }
+        // else {
+        paddle = new Paddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
+                // !!!!!!!!!!!!!!!!!
+        paddle.setCenter(center);
+        gameObjects().addGameObject(paddle);
+        // }
     }
-
 
 
     /**
@@ -170,11 +173,12 @@ public class BrickBreakerGameManager extends GameManager {
         Renderable turboImg =
                 imageReader.readImage(TURBO_IMAGE, true);
         Sound collisionSound = soundReader.readSound(COLLISION_SOUND);
-        Ball ball = new Ball(CENTER, ballImg, turboImg,collisionSound); // !!!!!!!!!!!!!!!! nu e Ball ball
-        this.ball = ball;
-        ball.setTag("ball");
-        gameObjects().addGameObject(ball);
+        this.ball = new Ball(CENTER, ballImg, turboImg,collisionSound); // !!!!!!!!!!!!!!!! nu e Ball ball
+        // this.ball = ball;
+        // ball.setTag("ball");
+        gameObjects().addGameObject(this.ball);
     }
+
 
     /**
      * This method builds the walls of the game.
@@ -206,14 +210,14 @@ public class BrickBreakerGameManager extends GameManager {
 
     }
 
+
     /**
      * This method builds all the bricks for the game.
+     * assigns a collision strategy to each brick.
      */
     private void brickBuilder() {
-//        brickArray = new Brick[(int)(BRICK_ROW_NUMBER * BRICK_COL_NUMBER)];
         float brickWidth = WINDOW_DIMENSIONS.x()/BRICK_COL_NUMBER;
         float newBrickCoordinate = 0;
-//        int index = 0;
         Vector2 brickSize = new Vector2(
                 brickWidth,
                 Brick.BRICK_HEIGHT
@@ -253,6 +257,7 @@ public class BrickBreakerGameManager extends GameManager {
         }
     }
 
+
     /**
      * This method returns a random collision strategy for the game.
      * @return a CollisionStrategy object, randomly chosen from the
@@ -264,6 +269,7 @@ public class BrickBreakerGameManager extends GameManager {
         return CollisionFactory.buildCollisionStrategy(strategyArray[randInt],this);
     }
 
+
     /**
      * This method builds all the hearts for the game.
      */
@@ -271,10 +277,11 @@ public class BrickBreakerGameManager extends GameManager {
         this.lifeCount = new LifeCount(
                 new Vector2(5,WINDOW_DIMENSIONS.y()-30),
                 this.lifeImg,
-                STARTING_NUMBER_OF_LIVES
+                STARTING_NUMBER_OF_LIVES, MAX_LIVES_NUMBER
         );
         gameObjects().addGameObject(lifeCount,Layer.UI);
     }
+
 
     /**
      * This method creates the background.
@@ -287,15 +294,22 @@ public class BrickBreakerGameManager extends GameManager {
         gameObjects().addGameObject(background, Layer.BACKGROUND);
     }
 
+
     /**
      * This method checks whether the game should end or restart
+     * based on the position of the ball.
+     * If the ball is out of bounds, the player loses a life.
+     * If the player has no lives left, the game ends.
+     * If the player has destroyed all the bricks, the player wins.
+     * An adequate prompt is shown in each case.
+     * @param ballHeight - the height of the ball
      */
     private void checkGameEnd(float ballHeight) {
         String prompt = null;
         if(lifeCount.getLives()>0){
             if(ballHeight>WINDOW_DIMENSIONS.y()) {
                 lifeCount.decrementLife();
-                System.out.println(lifeCount.getLives());
+                // System.out.println(lifeCount.getLives());
                 recenterBall();
             }
         }
@@ -311,6 +325,7 @@ public class BrickBreakerGameManager extends GameManager {
         }
     }
 
+
     /**
      * This method checks if the win button is pressed.
      * @return true if the win button is pressed, false otherwise.
@@ -318,6 +333,7 @@ public class BrickBreakerGameManager extends GameManager {
     private boolean winButtonPressed() {
         return inputListener.isKeyPressed(KeyEvent.VK_W);
     }
+
 
     /**
      * This method repositions the ball
@@ -327,8 +343,13 @@ public class BrickBreakerGameManager extends GameManager {
         createBall();
     }
     // ai metoda remove pt ce e mai sus !!!!!!!!!!!!
+
+
     /**
      * Shows the desired game end prompt
+     * Restart the game if the player chooses to play again,
+     * or close the window if the player chooses to exit.
+     * @param prompt - the prompt to show
      */
     private void gameEndPrompt(String prompt) {
         if(windowController.openYesNoDialog(prompt)){
@@ -338,6 +359,7 @@ public class BrickBreakerGameManager extends GameManager {
             windowController.closeWindow();
         }
     }
+
 
     /**
      * Removes a game object from the game.
@@ -379,21 +401,28 @@ public class BrickBreakerGameManager extends GameManager {
     }
 
     /**
-     * Build a new paddle
+     * Build an extra paddle, if it doesn't already exist.
+     * Called by the ExtraPaddle collision strategy.
      */
     public void makeExtraPaddle(){
         if(this.extraPaddle==null) {
+            Renderable paddleImg = imageReader.readImage(PADDLE_IMAGE, false);
+            
             Vector2 extraPaddleCenter = new Vector2(WINDOW_DIMENSIONS.x() / 2,
                     WINDOW_DIMENSIONS.y() / 2);
-            createPaddle(extraPaddleCenter, EXTRA_PADDLE);
+            this.extraPaddle = new ExtraPaddle(paddleImg, inputListener, WINDOW_DIMENSIONS.x());
+            extraPaddle.setCenter(extraPaddleCenter);
+            gameObjects().addGameObject(extraPaddle);
         }
     }
 
     /**
-     * Builds a new heart
+     * Builds a new Heart object and adds it to the game objects, 
+     * if the player has less than 4 lives. The heart is centered and will fall.
+     * @param center - the center of the heart
      */
     public void makeHeart(Vector2 center) {
-        if(lifeCount.getLives()<4){
+        if(lifeCount.getLives()< MAX_LIVES_NUMBER){
              Heart heart = new Heart(
                     center,new Vector2(20,20),
                     this.lifeImg,this.gameObjects(),this.lifeCount, WINDOW_DIMENSIONS.y());

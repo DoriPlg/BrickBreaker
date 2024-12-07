@@ -11,14 +11,15 @@ public class LifeCount extends GameObject {
     private static final Color YELLOW = Color.YELLOW;
     private static final Color RED = Color.RED;
     private static final Vector2 RENDER_SIZE = new Vector2(20, 20);
-    private final static int LIVES_UPPER_LIMIT = 4;
+    private final  int LIVES_UPPER_LIMIT;
 
     private TextRenderable text;
     private int lives;
 
-    public LifeCount(Vector2 position, Renderable renderable, int lives) {
+    public LifeCount(Vector2 position, Renderable renderable, int lives, int max_lives) {
         super(position, RENDER_SIZE, renderable);
         this.lives = lives;
+        this.LIVES_UPPER_LIMIT = max_lives;
         this.text = new TextRenderable(String.valueOf(lives));
 
     }

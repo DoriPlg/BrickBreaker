@@ -17,6 +17,8 @@ public class Brick extends GameObject {
     private static int brickCounter = 0;
     private final CollisionStrategy collisionStrategy;
 
+    
+
     public Brick(Vector2 position, Vector2 size, Renderable renderable, CollisionStrategy collisionStrategy) {
         super(position, size, renderable);
         this.collisionStrategy = collisionStrategy;
@@ -29,12 +31,15 @@ public class Brick extends GameObject {
     }
 
     @Override
+    public boolean shouldCollideWith(GameObject other) {
+        return other instanceof Ball;
+    }
+
+    @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if (other instanceof Ball ) { // !!!!!!!!!!! ball may be final
-            if (collisionStrategy.onCollision(this, other)) {
-                brickCounter--;
-            }
+        if (collisionStrategy.onCollision(this, other)) {
+            brickCounter--;
         }
     }
 
