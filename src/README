@@ -1,14 +1,22 @@
-____,dori.plg
-____,207685306
+teodoraf,dori.plg
+323291591,207685306
 
 Q&A
-1 Describe the choice we made at 1.7, it's ups and downs
-2.1 Describe the implementation of lifeCount
-2.2 explain shortly about each Class added to the code for this need
-3 explain shortly about the special behaviours, explain about any classes created for this
-3.1 Heart
-3.2 MoreBalls
-3.3 MorePaddles
-3.4 Turbo
-4 Explain how you did the DoubleColi... with regards to code design and how you limited it to 3
-5 if during pt2 you made changes from pt1, explain why they were needed
+1 We chose to give the BasicCollisionStrategy object the instance of BrickBreakerGameManager which called it, and to call onCollision for the Collision strategy of the brick upon collision. A downside of this is that it breaks encaplution, giving access to the game manger for every instance of a CollisionStrategy, but an upside is that the access to BrickBreakerGameManager allows us to implement special strategies relating to the whole game.
+
+2 We implemented lifeCount in a very straightforward manner, with a class containing a heart renderable and a counter for lives, and various final attributes (colors, max_lives etc.). To display it textually and graphically, we overrode the render() method with a loop to render the renderable in place.
+
+
+3.1 We created a separate class called heart, we made sure the heart falls from the brick that was destroyed by giving the bricks center to the method that created the instances of heart in the BrickBreakerGameManager , we made sure it only collides with the paddle by giving the main paddle the tag paddle and overriding the shouldCollide method of the Heart class such that it only collides with objects who have this tag
+
+3.2 To implement a collision strategy that adds the pucks, we first made a Puck class extending Ball, with cetrtain attributes regarding size and speed. We also made a public method in the game manager to make the desired number of Pucks. This method is called by the MoreBallsCollisionStrategy class, which extends the basic one.
+
+3.3 We added a new paddle through the makeExtraPaddle method in the BrickBreakerManager . We tagged it EXTRAPADDLE so it won't collide with the falling hearts. We made sure we also count its collisions with the pucks as in the on collision method of this class we counted its collisions with instances of ball which includes puck as pucks extend from ball.
+
+3.4 To implement this we first added methods in the Ball class to enter and exit turbo mode, and attributes to gauge relevant data. turboModeOn() is public and is called from onCollision, as we ensure other is an instance of Ball.
+
+4 In the DoubleCollisionStrategy class we imbued it with an array to hold (CollisionStrategy)s and upon cunstruction we have a while loop, in which the index must be less than either j, which starts at 2, or the max amount of strategies, which is constant at 3. then a random strategy is called via a function in the game manager, and if it is a double strategy, j is incremented, otherwise it is admitted to the array and i is incremented.
+
+5 One main change we made, is shifting the responsibility for deleting hit bricks from the brick and game manager to the collision strategy, to allow for special collision strategies and to validate wether the main ball hit or a puck. 
+To facilitate turboMode's renderable, we added another field to Ball's constructor.
+Also many attributes were publicized, mainly dimensions and constants.
