@@ -1,14 +1,14 @@
-package src.bricker.brick_strategies;
+package bricker.brick_strategies;
 
 import danogl.GameObject;
-import src.bricker.BrickBreakerGameManager;
+import bricker.main.BrickerGameManager;
 
 public class DoubleCollisionStartegy extends BasicCollisionStrategy implements CollisionStrategy {
 
 
     private static final int UPPER_LIMIT_STRATEGIES = 3 ;
 
-    private final BrickBreakerGameManager gameManager;
+    private final BrickerGameManager gameManager;
     private final CollisionStrategy[] collisionStrategies;
 
     /**
@@ -16,7 +16,7 @@ public class DoubleCollisionStartegy extends BasicCollisionStrategy implements C
      * Should generate the different strategies that will be used
      * @param gameManager the game manager that will be used in the strategies
      */
-    public DoubleCollisionStartegy(BrickBreakerGameManager gameManager){
+    public DoubleCollisionStartegy(BrickerGameManager gameManager){
         super(gameManager);
         this.gameManager = gameManager;
         this.collisionStrategies = new CollisionStrategy[UPPER_LIMIT_STRATEGIES];
@@ -36,22 +36,6 @@ public class DoubleCollisionStartegy extends BasicCollisionStrategy implements C
 
 
     /**
-     * Special action for the DoubleCollisionStartegy
-     * Should call the special action of each strategy
-     * @param thisObj the object that will be used in the special action
-     * @param otherObj the other object that will be used in the special action
-     */
-    @Override
-    public void specialAction(GameObject thisObj, GameObject otherObj) {
-        for(CollisionStrategy strategy : collisionStrategies){
-            if(strategy!=null){
-                strategy.specialAction(thisObj,otherObj);
-            }
-        }
-    }
-
-
-    /**
      * On collision for the DoubleCollisionStartegy
      * Should call the on collision of each strategy
      * @param thisObj the object that will be used in the on collision
@@ -59,11 +43,12 @@ public class DoubleCollisionStartegy extends BasicCollisionStrategy implements C
      * @return true if the collision was successful, false otherwise
      */
     @Override
-    public boolean onCollision(GameObject thisObj, GameObject otherObj){
-        if(super.onCollision(thisObj,otherObj)){
-            specialAction(thisObj, otherObj);
-            return true;
+    public void onCollision(GameObject thisObj, GameObject otherObj){
+        super.onCollision(thisObj,otherObj);
+        for(CollisionStrategy strategy : collisionStrategies){
+            if(strategy!=null){
+                strategy.onCollision(thisObj,otherObj);
+            }
         }
-        return false;
     }
 }

@@ -1,4 +1,4 @@
-package src.bricker;
+package bricker.main;
 
 import danogl.GameManager;
 import danogl.GameObject;
@@ -7,8 +7,8 @@ import danogl.components.CoordinateSpace;
 import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import src.bricker.brick_strategies.*;
-import src.bricker.game_objects.*;
+import bricker.brick_strategies.*;
+import bricker.gameobjects.*;
 
 import java.awt.event.KeyEvent;
 import java.util.Random;
@@ -17,7 +17,7 @@ import java.util.Random;
  * Manages the Brick Breaker game, including initializing game objects,
  * updating game state, and handling game events.
  */
-public class BrickBreakerGameManager extends GameManager {
+public class BrickerGameManager extends GameManager {
     private static Vector2 WINDOW_DIMENSIONS ;
     private static float BRICK_ROW_NUMBER = 7;
     private static float BRICK_COL_NUMBER = 8;
@@ -54,7 +54,7 @@ public class BrickBreakerGameManager extends GameManager {
      * @param windowTitle - the title of the window
      * @param windowDimensions - the dimensions of the window
      */
-    public BrickBreakerGameManager(String windowTitle, Vector2 windowDimensions) {
+    public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         super(windowTitle, windowDimensions);
     }
 
@@ -70,8 +70,8 @@ public class BrickBreakerGameManager extends GameManager {
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
-        this.lifeImg = imageReader.readImage(HEART_IMAGE, true);
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
+        this.lifeImg = imageReader.readImage(HEART_IMAGE, true);
         this.imageReader = imageReader;
         this.soundReader = soundReader;
         this.windowController = windowController;
@@ -103,7 +103,7 @@ public class BrickBreakerGameManager extends GameManager {
      * args[1] - number of rows
      */
     public static void main(String[] args) {
-        BrickBreakerGameManager game = new BrickBreakerGameManager("Bricker",
+        BrickerGameManager game = new BrickerGameManager("Bricker",
                 new Vector2(SCREEN_WIDTH, SCREEN_LENGTH));
         if(args.length!=0){
             if (args.length==2) {
@@ -139,7 +139,7 @@ public class BrickBreakerGameManager extends GameManager {
 
 
     /**
-     * This method builds the main paddle of the game.
+     * This method builds the bricker paddle of the game.
      * @param center - the center of the paddle
      */
     private void createPaddle(Vector2 center){
@@ -234,13 +234,14 @@ public class BrickBreakerGameManager extends GameManager {
      *         or a randomly chosen collision strategy.
      */
     private CollisionStrategy getCollisionStrategy() {
-        Random rnd = new Random();
-        if (rnd.nextBoolean()) {
-            return new BasicCollisionStrategy(this);
-        }
-        else {
-            return randomCollisionStrategy();
-        }
+        return new DoubleCollisionStartegy(this);
+//        Random rnd = new Random();
+//        if (rnd.nextBoolean()) {
+//            return new BasicCollisionStrategy(this);
+//        }
+//        else {
+//            return randomCollisionStrategy();
+//        }
     }
 
 

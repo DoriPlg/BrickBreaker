@@ -1,14 +1,15 @@
-package src.bricker.game_objects;
+package bricker.gameobjects;
 import danogl.GameObject;
 import danogl.collisions.Collision;
-import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import src.bricker.brick_strategies.CollisionStrategy;
+import bricker.brick_strategies.CollisionStrategy;
 
 
 public class Brick extends GameObject {
     public static final int BRICK_HEIGHT = 15;
+    private static final String EXISTS = "EXISTS";
+    public static final String POPPED = "POPPED";
 
     private static int brickCounter = 0;
     private final CollisionStrategy collisionStrategy;
@@ -25,6 +26,7 @@ public class Brick extends GameObject {
         super(position, size, renderable);
         this.collisionStrategy = collisionStrategy;
         this.brickCounter++;
+        setTag(EXISTS);
     }
 
 
@@ -35,6 +37,7 @@ public class Brick extends GameObject {
     public static int getBrickCounter() {
         return brickCounter;
     }
+
 
 
     /**
@@ -55,9 +58,9 @@ public class Brick extends GameObject {
      */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
-        super.onCollisionEnter(other, collision);
-        if (collisionStrategy.onCollision(this, other)) {
+        if (this.getTag().equals(EXISTS)) {
             brickCounter--;
         }
+        super.onCollisionEnter(other, collision);
     }
 }

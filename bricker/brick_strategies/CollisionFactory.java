@@ -1,6 +1,6 @@
-package src.bricker.brick_strategies;
+package bricker.brick_strategies;
 
-import src.bricker.BrickBreakerGameManager;
+import bricker.main.BrickerGameManager;
 public class CollisionFactory {
 
     private static final String EXTRA_BALL = "ball";
@@ -15,7 +15,7 @@ public class CollisionFactory {
      * @param type the type of the strategy to be built
      * @param gameManager the game manager to be used in the strategy
      */
-    public static CollisionStrategy buildCollisionStrategy(String type, BrickBreakerGameManager gameManager){
+    public static CollisionStrategy buildCollisionStrategy(String type, BrickerGameManager gameManager){
         CollisionStrategy collisionStrategy;
         switch(type){
             case EXTRA_BALL:
