@@ -58,9 +58,10 @@ public class Brick extends GameObject {
      */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
+        super.onCollisionEnter(other, collision);
         if (this.getTag().equals(EXISTS)) {
             brickCounter--;
         }
-        super.onCollisionEnter(other, collision);
+        collisionStrategy.onCollision(this, other);
     }
 }
