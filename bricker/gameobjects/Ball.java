@@ -50,7 +50,7 @@ public class Ball extends GameObject {
         if (!turboMode) {
             setVelocity(getVelocity().mult(TURBO_FACTOR));
             renderer().setRenderable(turboRender);
-            timeTurbo = getCollisions();
+            timeTurbo = getCollisionCounter();
             this.turboMode = true;
         }
     }
@@ -81,7 +81,7 @@ public class Ball extends GameObject {
         setVelocity(newVel);
         collisions++;
         collissionSound.play();
-        if (getCollisions() > HITS_IN_TURBO + timeTurbo && turboMode) {
+        if (getCollisionCounter() > HITS_IN_TURBO + timeTurbo && turboMode) {
             turboModeOff();
         }
     }
@@ -91,7 +91,7 @@ public class Ball extends GameObject {
      * Method returning the amount of collisions so far
      * @return int for collisions...
      */
-    public int getCollisions() {
+    public int getCollisionCounter() {
         return collisions;
     }
 }
