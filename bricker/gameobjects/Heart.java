@@ -41,7 +41,7 @@ public class Heart extends GameObject {
      */
     @Override
     public boolean shouldCollideWith(GameObject other){
-        return other.getTag().equals(Paddle.PADDLE);
+        return (other.getTag().equals(Paddle.PADDLE) && lifeCount.getLives() < 4);
     }
 
     /**
