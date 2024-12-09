@@ -199,7 +199,7 @@ public class BrickerGameManager extends GameManager {
 
     /**
      * This method builds all the bricks for the game.
-     * assigns a collision strategy to each brick.
+     * Assigns a collision strategy to each brick.
      */
     private void brickBuilder() {
         float brickWidth = WINDOW_DIMENSIONS.x()/BRICK_COL_NUMBER;
