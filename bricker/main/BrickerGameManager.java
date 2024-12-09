@@ -403,12 +403,11 @@ public class BrickerGameManager extends GameManager {
      * @param center - the center of the heart
      */
     public void makeHeart(Vector2 center) {
-        if(lifeCount.getLives()< MAX_LIVES_NUMBER){
              Heart heart = new Heart(
                     center,new Vector2(20,20),
                     this.lifeImg,this.gameObjects(),this.lifeCount, WINDOW_DIMENSIONS.y());
             heart.setCenter(center);
             gameObjects().addGameObject(heart);
-        }
+      
     }
 }
